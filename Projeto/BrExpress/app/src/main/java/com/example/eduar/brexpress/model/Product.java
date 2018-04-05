@@ -1,6 +1,8 @@
-package com.example.eduar.brexpress;
+package com.example.eduar.brexpress.model;
 
 import android.widget.ImageView;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by eduar on 03/04/2018.
@@ -8,9 +10,15 @@ import android.widget.ImageView;
 
 public class Product {
 
+    @SerializedName("name")
     private String name;
+
+    @SerializedName("price")
     private Float price;
+
+    @SerializedName("discount")
     private Float discount;
+
     private ImageView image;
 
     public String getName() {

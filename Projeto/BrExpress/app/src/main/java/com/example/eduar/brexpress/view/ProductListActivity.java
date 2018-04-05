@@ -1,4 +1,4 @@
-package com.example.eduar.brexpress;
+package com.example.eduar.brexpress.view;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -11,6 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
 
+import com.example.eduar.brexpress.R;
+import com.example.eduar.brexpress.model.Product;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -19,7 +22,7 @@ import java.util.Random;
  * Created by eduar on 03/04/2018.
  */
 
-public class ProductListActivity extends AppCompatActivity {
+public class ProductListActivity extends ActivityWithLoading {
 
     private RecyclerView mRecyclerView;
     private ProductListAdapter mAdapter;
@@ -41,6 +44,8 @@ public class ProductListActivity extends AppCompatActivity {
 
             mProductList.add(p);
         }
+
+        showLoading(null);
 
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);

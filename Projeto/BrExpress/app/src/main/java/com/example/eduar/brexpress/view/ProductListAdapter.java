@@ -1,12 +1,15 @@
-package com.example.eduar.brexpress;
+package com.example.eduar.brexpress.view;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.eduar.brexpress.R;
+import com.example.eduar.brexpress.model.Product;
 
 import java.util.List;
 
@@ -36,8 +39,15 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Product p = mProducts.get(position);
-        holder.nameTextView.setText(p.getName());
-        holder.priceTextView.setText(p.getPrice().toString());
+        holder.mNameTextView.setText(p.getName());
+        holder.mPriceTextView.setText(p.getPrice().toString());
+
+        holder.mContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     @Override
@@ -47,15 +57,17 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public ImageView productImageView;
-        public TextView nameTextView;
-        public TextView priceTextView;
+        private ImageView mProductImageView;
+        private TextView mNameTextView;
+        private TextView mPriceTextView;
+        private LinearLayout mContainer;
 
-        public ViewHolder(View card) {
+        private ViewHolder(View card) {
             super(card);
-            nameTextView = (TextView) card.findViewById(R.id.name_text);
-            priceTextView = (TextView) card.findViewById(R.id.price_text);
-            productImageView = (ImageView) card.findViewById(R.id.product_image);
+            mContainer = card.findViewById(R.id.container);
+            mNameTextView = card.findViewById(R.id.name_text);
+            mPriceTextView = card.findViewById(R.id.price_text);
+            mProductImageView = card.findViewById(R.id.product_image);
         }
     }
 }
