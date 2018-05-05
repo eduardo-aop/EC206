@@ -3,6 +3,8 @@
     package="com.example.eduar.brexpress">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".view.ProductListActivity">
+        <activity android:name=".view.ProductImagesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

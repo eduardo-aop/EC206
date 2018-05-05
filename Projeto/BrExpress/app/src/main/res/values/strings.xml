@@ -3,7 +3,13 @@
 
 
     <string name="email">E-mail</string>
-    <string name="password">Password</string>
+    <string name="password">Senha</string>
     <string name="login">Login</string>
-    <string name="forget_password">Forget Password?</string>
+    <string name="forget_password">Esqueceu Senha?</string>
+    <string name="product_name">Nome do Produto</string>
+    <string name="product_price">Preço do Produto</string>
+    <string name="discount">Desconto</string>
+    <string name="quantity">Qtd</string>
+    <string name="product_description">Descrição do Produto</string>
+    <string name="product_picture">Foto do Produto</string>
 </resources>

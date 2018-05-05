@@ -39,7 +39,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Product p = mProducts.get(position);
-        holder.mNameTextView.setText(p.getName());
+        holder.nameTextView.setText(p.getName());
         holder.mPriceTextView.setText(p.getPrice().toString());
 
         holder.mContainer.setOnClickListener(new View.OnClickListener() {
@@ -58,16 +58,16 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         private ImageView mProductImageView;
-        private TextView mNameTextView;
+        private TextView nameTextView;
         private TextView mPriceTextView;
         private LinearLayout mContainer;
 
         private ViewHolder(View card) {
             super(card);
             mContainer = card.findViewById(R.id.container);
-            mNameTextView = card.findViewById(R.id.name_text);
+            nameTextView = card.findViewById(R.id.name_text);
             mPriceTextView = card.findViewById(R.id.price_text);
-            mProductImageView = card.findViewById(R.id.product_image);
+            mProductImageView = card.findViewById(R.id.selected_product_image);
         }
     }
 }

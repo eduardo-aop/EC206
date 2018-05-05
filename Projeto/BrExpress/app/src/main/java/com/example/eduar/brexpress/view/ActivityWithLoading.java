@@ -33,7 +33,7 @@ public class ActivityWithLoading extends AppCompatActivity {
 
         View view = LayoutInflater.from(this).inflate(R.layout.progress_dialog, null);
         TextView message = view.findViewById(R.id.message);
-        message.setText("");
+        message.setText(text);
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage(null);

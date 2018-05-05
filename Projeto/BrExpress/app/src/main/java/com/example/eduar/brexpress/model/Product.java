@@ -1,6 +1,6 @@
 package com.example.eduar.brexpress.model;
 
-import android.widget.ImageView;
+import android.media.Image;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -11,45 +11,57 @@ import com.google.gson.annotations.SerializedName;
 public class Product {
 
     @SerializedName("name")
-    private String name;
+    private String mName;
 
     @SerializedName("price")
-    private Float price;
+    private Float mPrice;
 
     @SerializedName("discount")
-    private Float discount;
+    private Float mDiscount;
 
-    private ImageView image;
+    @SerializedName("mainImage")
+    private Image mMainImage;
+
+    @SerializedName("photos")
+    private Image mImages;
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.mName = name;
     }
 
     public Float getPrice() {
-        return price;
+        return mPrice;
     }
 
-    public void setPrice(Float price) {
-        this.price = price;
+    public void setPrice(Float mPrice) {
+        this.mPrice = mPrice;
     }
 
     public Float getDiscount() {
-        return discount;
+        return mDiscount;
     }
 
     public void setDiscount(Float discount) {
-        this.discount = discount;
+        this.mDiscount = discount;
     }
 
-    public ImageView getImage() {
-        return image;
+    public Image getImage() {
+        return mMainImage;
     }
 
-    public void setImage(ImageView image) {
-        this.image = image;
+    public void setImage(Image image) {
+        this.mMainImage = image;
+    }
+
+    public Image getImages() {
+        return mImages;
+    }
+
+    public void setImages(Image mImages) {
+        this.mImages = mImages;
     }
 }
