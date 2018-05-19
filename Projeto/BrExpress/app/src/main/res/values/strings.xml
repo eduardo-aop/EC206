@@ -12,4 +12,12 @@
     <string name="quantity">Qtd</string>
     <string name="product_description">Descrição do Produto</string>
     <string name="product_picture">Foto do Produto</string>
+    <string name="save_data">Salvar Dados</string>
+    <string name="choose_pictures">Escolher mais fotos</string>
+    <string name="delete">Apagar</string>
+    <string name="min_product_name_length">Campo nome deve conter no mínimo 5 letras</string>
+    <string name="max_product_qtd_available">É permitido no máximo 999 unidades do produto</string>
+    <string name="max_product_discount_available">É permitido no máximo 99% de desconto</string>
+    <string name="selected_a_picture">Selecione uma foto para o produto</string>
+    <string name="fill_all_fields">Preencha todos os campos</string>
 </resources>

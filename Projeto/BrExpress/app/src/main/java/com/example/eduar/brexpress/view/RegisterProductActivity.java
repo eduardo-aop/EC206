@@ -6,22 +6,25 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.utils.Utils;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.ArrayList;
+import java.text.NumberFormat;
 
 /**
  * Created by eduar on 04/05/2018.
@@ -31,8 +34,16 @@ public class RegisterProductActivity extends ActivityWithLoading {
 
     public final int REQUEST_CODE_ASK_FOR_CAMERA = 1;
 
-    ImageView mSelectPhotoImageView = null;
-    ImageView mProductImageImageView = null;
+    private ImageView mSelectPhotoImageView = null;
+    private ImageView mProductImageImageView = null;
+    private EditText mProductNameEditText = null;
+    private EditText mProductPriceEditText = null;
+    private EditText mProductDiscountEditText = null;
+    private EditText mProductQtdEditText = null;
+    private EditText mProductDescriptionEditText = null;
+
+    private String mCurrentPriceText = "";
+    private boolean mSelectedPicture = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,21 +51,147 @@ public class RegisterProductActivity extends ActivityWithLoading {
 
         setContentView(R.layout.activity_register_product);
 
-        mSelectPhotoImageView = findViewById(R.id.select_photos);
-        mProductImageImageView = findViewById(R.id.selected_product_image);
-
         hasCameraPermission();
 
+        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.my_toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        initAllComponents();
+        addComponentsListeners();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_register_product, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_save) {
+            if (validateField()) {
+
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Initialize all UI components
+     */
+    private void initAllComponents() {
+        mSelectPhotoImageView = findViewById(R.id.select_photos);
+        mProductImageImageView = findViewById(R.id.selected_product_image);
+        mProductNameEditText = findViewById(R.id.product_name);
+        mProductPriceEditText = findViewById(R.id.product_price);
+        mProductDiscountEditText = findViewById(R.id.product_discount);
+        mProductQtdEditText = findViewById(R.id.product_qtd);
+        mProductDescriptionEditText = findViewById(R.id.product_description);
+        mSelectedPicture = false;
+    }
+
+    /**
+     * Add listeners to components
+     */
+    private void addComponentsListeners() {
         mSelectPhotoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (hasCameraPermission()) {
-                    selectProductPhoto();
+            if (hasCameraPermission()) {
+                selectProductPhotos();
+            }
+            }
+        });
+
+        mProductPriceEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(!charSequence.toString().equals(mCurrentPriceText)){
+                    mProductPriceEditText.removeTextChangedListener(this);
+
+                    String cleanString = charSequence.toString().replaceAll("[R$,.]", "");
+
+                    double parsed = Double.parseDouble(cleanString);
+                    String formatted = NumberFormat.getCurrencyInstance().format((parsed/100));
+
+                    mCurrentPriceText = formatted;
+                    mProductPriceEditText.setText(formatted);
+                    mProductPriceEditText.setSelection(formatted.length());
+
+                    mProductPriceEditText.addTextChangedListener(this);
                 }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
     }
 
+    /**
+     * Check if has some empty field
+     * @return
+     */
+    private boolean checkEmptyFields() {
+        if (mProductNameEditText.getText().toString().isEmpty()
+                || mProductPriceEditText.getText().toString().isEmpty()
+                || mProductDiscountEditText.getText().toString().isEmpty()
+                || mProductQtdEditText.getText().toString().isEmpty()
+                || mProductDescriptionEditText.getText().toString().isEmpty()) {
+            Toast.makeText(this, R.string.fill_all_fields, Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Validate all fields
+     * @return if all fields are correct
+     */
+    private boolean validateField() {
+        if (!checkEmptyFields()) {
+            return false;
+        }
+        if (mProductNameEditText.getText().toString().length() < 5) {
+            mProductNameEditText.setError(getResources().getString(R.string.min_product_name_length));
+            return false;
+        }
+        if (mProductQtdEditText.getText().toString().length() > 3) {
+            mProductQtdEditText.setError(getResources().getString(R.string.max_product_qtd_available));
+            return false;
+        }
+        if (mProductDiscountEditText.getText().toString().length() > 2) {
+            mProductDiscountEditText.setError(getResources().getString(R.string.max_product_discount_available));
+            return false;
+        }
+        if (mSelectedPicture) {
+            Toast.makeText(this, R.string.selected_a_picture, Toast.LENGTH_LONG).show();
+        }
+        return true;
+    }
+
+    /**
+     * Check camera permission is allowed
+     * @return
+     */
     private boolean hasCameraPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -65,7 +202,10 @@ public class RegisterProductActivity extends ActivityWithLoading {
         return true;
     }
 
-    private void selectProductPhoto() {
+    /**
+     * Select picture by camera or gallery
+     */
+    private void selectProductPhotos() {
         //Build galleryIntent
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryIntent.setType("image/*");
@@ -94,18 +234,28 @@ public class RegisterProductActivity extends ActivityWithLoading {
 
         if (requestCode == REQUEST_CODE_ASK_FOR_CAMERA && resultCode == Activity.RESULT_OK) {
             if (data.hasExtra("data")) {
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-                mProductImageImageView.setImageBitmap(photo);
-            } else {
                 try {
-                    if (data.getData() != null) {
-                        final Uri imageUri = data.getData();
-                        final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                        mProductImageImageView.setImageBitmap(selectedImage);
-                    }
-                } catch (FileNotFoundException e) {
+                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                    mProductImageImageView.setImageBitmap(bitmap);
+                    mSelectedPicture = true;
+                } catch (NullPointerException e) {
                     e.printStackTrace();
+                }
+            } else {
+                if (data.getClipData() != null) {
+                    ClipData mClipData = data.getClipData();
+                    for (int i = 0; i < mClipData.getItemCount(); i++) {
+                        ClipData.Item item = mClipData.getItemAt(i);
+                        Uri uri = item.getUri();
+
+                        try {
+                            Bitmap bitmap = Utils.convertBitmapToUri(this, uri);
+                            mProductImageImageView.setImageBitmap(bitmap);
+                            mSelectedPicture = true;
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         }
@@ -113,13 +263,12 @@ public class RegisterProductActivity extends ActivityWithLoading {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         switch (requestCode) {
             case REQUEST_CODE_ASK_FOR_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     //Allow to open camera
-                    selectProductPhoto();
+                    selectProductPhotos();
                 }
                 break;
             default:

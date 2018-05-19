@@ -8,7 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.example.eduar.brexpress.R;
 
@@ -25,9 +27,10 @@ import java.util.List;
 public class ProductImagesAdapter extends RecyclerView.Adapter<ProductImagesAdapter.ViewHolder> {
 
     private ProductImagesActivity mActivity;
-    private List<Uri> mProductImages = new ArrayList<>();
+    private List<Bitmap> mProductImages = new ArrayList<>();
+    private List<Bitmap> mSelectedProductImages = new ArrayList<>();
 
-    public ProductImagesAdapter(ProductImagesActivity activity, List<Uri> productImages) {
+    public ProductImagesAdapter(ProductImagesActivity activity, List<Bitmap> productImages) {
         this.mActivity = activity;
         this.mProductImages = productImages;
     }
@@ -41,22 +44,43 @@ public class ProductImagesAdapter extends RecyclerView.Adapter<ProductImagesAdap
         return vh;
     }
 
-
     @Override
-    public void onBindViewHolder(ProductImagesAdapter.ViewHolder holder, int position) {
-        Uri uri = mProductImages.get(position);
+    public void onBindViewHolder(final ProductImagesAdapter.ViewHolder holder, int position) {
+        final Bitmap bitmap = mProductImages.get(position);
 
-        try {
-            final InputStream imageStream = mActivity.getContentResolver().openInputStream(uri);
-            final Bitmap image = BitmapFactory.decodeStream(imageStream);
+        holder.mProductImageView.setImageBitmap(bitmap);
 
-            holder.mProductImageView.setImageBitmap(image);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        holder.mContainer.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                addOrRemoveFromSelected(holder, bitmap);
+                mActivity.isRemovingPhotos(!mSelectedProductImages.isEmpty());
+                return true;
+            }
+        });
+
+        holder.mContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!mSelectedProductImages.isEmpty()) {
+                    addOrRemoveFromSelected(holder, bitmap);
+                    mActivity.isRemovingPhotos(!mSelectedProductImages.isEmpty());
+                }
+            }
+        });
     }
 
-    public void dataChanged(List<Uri> list) {
+    public void addOrRemoveFromSelected(ViewHolder holder, Bitmap bitmap) {
+        if (!mSelectedProductImages.contains(bitmap)) {
+            mSelectedProductImages.add(bitmap);
+        } else {
+            mSelectedProductImages.remove(bitmap);
+        }
+
+        holder.mSelection.setVisibility(mSelectedProductImages.contains(bitmap) ? View.VISIBLE : View.GONE);
+    }
+
+    public void dataChanged(List<Bitmap> list) {
         mProductImages = list;
 
         notifyDataSetChanged();
@@ -71,11 +95,15 @@ public class ProductImagesAdapter extends RecyclerView.Adapter<ProductImagesAdap
         // each data item is just a string in this case
 
         ImageView mProductImageView;
+        FrameLayout mContainer;
+        LinearLayout mSelection;
 
         private ViewHolder(View card) {
             super(card);
 
             mProductImageView = card.findViewById(R.id.product_image);
+            mContainer = card.findViewById(R.id.container);
+            mSelection = card.findViewById(R.id.selection);
         }
     }
 }
