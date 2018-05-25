@@ -1,7 +1,11 @@
 package com.example.eduar.brexpress.model;
 
+import android.graphics.Bitmap;
 import android.media.Image;
+import android.os.Parcel;
+import android.os.Parcelable;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -9,6 +13,9 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Product {
+
+    @SerializedName("id")
+    private int mId;
 
     @SerializedName("name")
     private String mName;
@@ -19,11 +26,24 @@ public class Product {
     @SerializedName("discount")
     private Float mDiscount;
 
-    @SerializedName("mainImage")
-    private Image mMainImage;
+    @SerializedName("description")
+    private String mDescription;
 
-    @SerializedName("photos")
-    private Image mImages;
+    @SerializedName("image")
+    private String mImageBase64;
+
+    @SerializedName("imageUrl")
+    private String mImageUrl;
+
+    private Bitmap mImage;
+
+    public int getId() {
+        return mId;
+    }
+
+    public void setId(int id) {
+        this.mId = id;
+    }
 
     public String getName() {
         return mName;
@@ -49,19 +69,40 @@ public class Product {
         this.mDiscount = discount;
     }
 
-    public Image getImage() {
-        return mMainImage;
+    public String getDescription() {
+        return mDescription;
     }
 
-    public void setImage(Image image) {
-        this.mMainImage = image;
+    public void setDescription(String mDescription) {
+        this.mDescription = mDescription;
     }
 
-    public Image getImages() {
-        return mImages;
+    public Bitmap getImage() {
+        return mImage;
     }
 
-    public void setImages(Image mImages) {
-        this.mImages = mImages;
+    public void setImage(Bitmap image) {
+        this.mImage = image;
+    }
+
+    public String getImageBase64() {
+        return mImageBase64;
+    }
+
+    public void setImageBase64(String imageBase64) {
+        this.mImageBase64 = imageBase64;
+    }
+
+    public String getImageUrl() {
+        return mImageUrl;
+    }
+
+    public void setImageUrl(String mImageUrl) {
+        this.mImageUrl = mImageUrl;
+    }
+
+    public String converToJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }

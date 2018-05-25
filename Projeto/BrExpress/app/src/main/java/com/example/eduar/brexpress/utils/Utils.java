@@ -1,12 +1,16 @@
 package com.example.eduar.brexpress.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.TypedValue;
 
 import java.io.ByteArrayOutputStream;
@@ -55,11 +59,27 @@ public class Utils {
         return null;
     }
 
-    public static byte[] convertImageToBase64(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
-        byte[] b = baos.toByteArray();
+    public static void convertImageToBase64(final Context context, final Bitmap bitmap) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+                byte[] b = baos.toByteArray();
 
-        return b;
+                String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+
+                Intent intent = new Intent(Constants.CONVERT_IMAGE_TO_BASE64_RECEIVER);
+                intent.putExtra(Constants.BASE64_IMAGE, encodedImage);
+                context.sendBroadcast(intent);
+            }
+        }).start();
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

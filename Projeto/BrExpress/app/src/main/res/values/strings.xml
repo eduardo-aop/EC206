@@ -20,4 +20,9 @@
     <string name="max_product_discount_available">É permitido no máximo 99% de desconto</string>
     <string name="selected_a_picture">Selecione uma foto para o produto</string>
     <string name="fill_all_fields">Preencha todos os campos</string>
+    <string name="product_saved_success">Produto cadastrado com sucesso!</string>
+    <string name="product_saved_error">Falha ao cadastrar produto. Tente Novamente!</string>
+    <string name="no_internet_connection">Sem conexão com a internet.</string>
+    <string name="failed_to_load_products">Falha ao carregar produtos</string>
+    <string name="price">R$ %1$f</string>
 </resources>

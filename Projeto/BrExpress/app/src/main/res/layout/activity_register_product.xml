@@ -90,6 +90,7 @@
                             android:layout_weight="1"
                             android:hint="@string/discount"
                             android:maxLines="1"
+                            android:maxLength="2"
                             android:inputType="number"/>
 
                         <EditText
@@ -99,6 +100,7 @@
                             android:layout_weight="1"
                             android:hint="@string/quantity"
                             android:maxLines="1"
+                            android:maxLength="3"
                             android:inputType="number"/>
                     </LinearLayout>
 

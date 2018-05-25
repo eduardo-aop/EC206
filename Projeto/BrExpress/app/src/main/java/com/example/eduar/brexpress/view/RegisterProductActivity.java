@@ -2,10 +2,14 @@ package com.example.eduar.brexpress.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +26,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.eduar.brexpress.R;
+import com.example.eduar.brexpress.control.ProductControl;
+import com.example.eduar.brexpress.model.Product;
+import com.example.eduar.brexpress.utils.Constants;
 import com.example.eduar.brexpress.utils.Utils;
 
 import java.text.NumberFormat;
@@ -45,6 +52,8 @@ public class RegisterProductActivity extends ActivityWithLoading {
     private String mCurrentPriceText = "";
     private boolean mSelectedPicture = false;
 
+    private BroadcastReceiver mReceiver;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +70,8 @@ public class RegisterProductActivity extends ActivityWithLoading {
 
         initAllComponents();
         addComponentsListeners();
+        broadcastReceiver();
+        registerBroadcasts();
     }
 
     @Override
@@ -80,7 +91,9 @@ public class RegisterProductActivity extends ActivityWithLoading {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
             if (validateField()) {
-
+                RegisterProductActivity.this.showLoading(null);
+                Utils.convertImageToBase64(this,
+                        ((BitmapDrawable)mProductImageImageView.getDrawable()).getBitmap());
             }
             return true;
         }
@@ -182,8 +195,9 @@ public class RegisterProductActivity extends ActivityWithLoading {
             mProductDiscountEditText.setError(getResources().getString(R.string.max_product_discount_available));
             return false;
         }
-        if (mSelectedPicture) {
+        if (!mSelectedPicture) {
             Toast.makeText(this, R.string.selected_a_picture, Toast.LENGTH_LONG).show();
+            return false;
         }
         return true;
     }
@@ -274,5 +288,61 @@ public class RegisterProductActivity extends ActivityWithLoading {
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    private void broadcastReceiver() {
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                if (intent != null && intent.getAction() != null) {
+                    switch (intent.getAction()) {
+                        case Constants.PRODUCT_SAVED_SUCCESSFULLY:
+                            Toast.makeText(RegisterProductActivity.this,
+                                    R.string.product_saved_success, Toast.LENGTH_LONG).show();
+                            RegisterProductActivity.this.stopLoading();
+                            break;
+                        case Constants.PRODUCT_SAVED_ERROR:
+                            Toast.makeText(RegisterProductActivity.this,
+                                    R.string.product_saved_error, Toast.LENGTH_LONG).show();
+                            RegisterProductActivity.this.stopLoading();
+                            break;
+                        case Constants.CONVERT_IMAGE_TO_BASE64_RECEIVER:
+                            Product product = new Product();
+                            product.setName(mProductNameEditText.getText().toString());
+                            product.setDiscount(Float.valueOf(mProductDiscountEditText.getText().toString()));
+                            product.setDescription(mProductDescriptionEditText.getText().toString());
+                            product.setImageBase64(intent.getExtras().getString(Constants.BASE64_IMAGE));
+                            String price = mProductPriceEditText.getText().toString();
+                            String cleanPriceString = price.replaceAll("[R$]", "");
+                            cleanPriceString = cleanPriceString.replaceAll(",",".");
+
+                            product.setPrice(Float.valueOf(cleanPriceString));
+
+                            ProductControl.getInstance(RegisterProductActivity.this).saveProduct(product);
+                            break;
+                        default:
+                            break;
+
+                    }
+                }
+            }
+        };
+    }
+
+    /**
+     * Registering all broadcast from this class
+     */
+    private void registerBroadcasts() {
+        registerReceiver(mReceiver, new IntentFilter(Constants.PRODUCT_SAVED_SUCCESSFULLY));
+        registerReceiver(mReceiver, new IntentFilter(Constants.PRODUCT_SAVED_ERROR));
+        registerReceiver(mReceiver, new IntentFilter(Constants.CONVERT_IMAGE_TO_BASE64_RECEIVER));
+        registerReceiver(mReceiver, new IntentFilter(Constants.BASE64_IMAGE));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mReceiver);
     }
 }
