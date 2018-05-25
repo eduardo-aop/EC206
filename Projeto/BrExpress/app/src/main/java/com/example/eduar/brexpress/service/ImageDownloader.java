@@ -1,17 +1,15 @@
 package com.example.eduar.brexpress.service;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 
 import com.example.eduar.brexpress.utils.Constants;
-import com.example.eduar.brexpress.view.ProductListActivity;
+import com.example.eduar.brexpress.view.FragmentWithLoading;
+import com.example.eduar.brexpress.view.ProductListFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 
 /**
  * Created by eduar on 23/05/2018.
@@ -28,7 +26,7 @@ public class ImageDownloader extends AsyncTask<Object, Void, Void> {
     protected Void doInBackground(Object... params) {
         int imageDownloadingId = (int) params[0];
         String url = Constants.SERVER_URL + "downloadImage?id=" + Integer.valueOf(String.valueOf(imageDownloadingId));
-        Context context = (Context) params[1];
+        FragmentWithLoading fragment = (FragmentWithLoading) params[1];
 
         InputStream inputStream = null;
         try {
@@ -37,8 +35,8 @@ public class ImageDownloader extends AsyncTask<Object, Void, Void> {
             e.printStackTrace();
         }
 
-        if (context instanceof ProductListActivity) {
-            ((ProductListActivity) context).imageDownloaded(inputStream, imageDownloadingId);
+        if (fragment instanceof ProductListFragment) {
+            ((ProductListFragment) fragment).imageDownloaded(inputStream, imageDownloadingId);
         }
         return null;
     }

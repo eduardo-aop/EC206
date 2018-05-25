@@ -1,6 +1,5 @@
 package com.example.eduar.brexpress.view;
 
-import android.content.BroadcastReceiver;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,48 +26,39 @@ import java.util.List;
  * Created by eduar on 03/04/2018.
  */
 
-public class ProductListActivity extends FragmentWithLoading {
+public class ProductListFragment extends FragmentWithLoading {
 
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefresh;
     private ProductListAdapter mAdapter;
     private List<Product> mProductList;
 
-    private BroadcastReceiver mReceiver;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_products_list);
+        View view = inflater.inflate(R.layout.activity_products_list, container, false);
 
         mProductList = new ArrayList<>();
 
         loadProducts();
 
-        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.my_toolbar);
-        setSupportActionBar(toolbar);
-
-        mRecyclerView = findViewById(R.id.recycler_view);
-        mSwipeRefresh = findViewById(R.id.swipe_refresh);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+        mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
 
         addListeners();
         this.showLoading(null);
 
         mAdapter = new ProductListAdapter(this, mProductList);
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this.getContext(), 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2,
-                Utils.dpToPx(this, 10), true));
+                Utils.dpToPx(this.getContext(), 10), true));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
+
+        return view;
     }
 
     private void addListeners() {
@@ -104,7 +94,7 @@ public class ProductListActivity extends FragmentWithLoading {
         mSwipeRefresh.setRefreshing(false);
         mRecyclerView.setEnabled(true);
         this.stopLoading();
-        Toast.makeText(this, R.string.failed_to_load_products, Toast.LENGTH_LONG).show();
+        Toast.makeText(this.getContext(), R.string.failed_to_load_products, Toast.LENGTH_LONG).show();
     }
 
     public void imageDownloaded(InputStream inputStream, int id) {

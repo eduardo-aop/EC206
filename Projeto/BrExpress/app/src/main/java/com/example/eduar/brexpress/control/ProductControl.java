@@ -15,7 +15,8 @@ import com.example.eduar.brexpress.service.GsonRequest;
 import com.example.eduar.brexpress.utils.Constants;
 import com.example.eduar.brexpress.utils.Utils;
 import com.example.eduar.brexpress.view.ActivityWithLoading;
-import com.example.eduar.brexpress.view.ProductListActivity;
+import com.example.eduar.brexpress.view.FragmentWithLoading;
+import com.example.eduar.brexpress.view.ProductListFragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -31,10 +32,10 @@ import java.util.List;
 public class ProductControl {
     private static ProductControl mInstance = null;
 
-    private static Context mContext = null;
+    private static FragmentWithLoading mFragment = null;
 
-    public static ProductControl getInstance(Context context) {
-        mContext = context;
+    public static ProductControl getInstance(FragmentWithLoading fragment) {
+        mFragment = fragment;
 
         if (mInstance == null)
             mInstance = new ProductControl();
@@ -46,7 +47,7 @@ public class ProductControl {
     }
 
     public void getAllProducts() {
-        if (Utils.isNetworkAvailable(mContext)) {
+        if (Utils.isNetworkAvailable(mFragment.getContext())) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -55,21 +56,19 @@ public class ProductControl {
                         @Override
                         public void onResponse(JSONArray response) {
                             Log.d(ProductControl.class.getName(), "It Works");
-                            Intent intent = new Intent(Constants.PRODUCT_LOADED_SUCCESS);
                             Gson gson = new Gson();
                             Type listType = new TypeToken<List<Product>>(){}.getType();
                             List<Product> productList = gson.fromJson(response.toString(), listType);
-                            if (mContext instanceof ProductListActivity) {
-                                ((ProductListActivity) mContext).allProductsLoaded(productList);
+                            if (mFragment instanceof ProductListFragment) {
+                                ((ProductListFragment) mFragment).allProductsLoaded(productList);
                             }
-                            mContext.sendBroadcast(intent);
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Log.d(ProductControl.class.getName(), "It does not Work");
-                            if (mContext instanceof ProductListActivity) {
-                                ((ProductListActivity) mContext).allProductsLoadedError();
+                            if (mFragment instanceof ProductListFragment) {
+                                ((ProductListFragment) mFragment).allProductsLoadedError();
                             }
                         }
                     });
@@ -92,19 +91,19 @@ public class ProductControl {
 //                        }
 //                    });
 
-                    MainApplication.getInstance(mContext).addToRequestQueue(jsonArrayRequest);
+                    MainApplication.getInstance(mFragment.getContext()).addToRequestQueue(jsonArrayRequest);
                 }
             }).start();
         } else {
-            Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-            if (mContext instanceof ActivityWithLoading) {
-                ((ActivityWithLoading) mContext).stopLoading();
+            Toast.makeText(mFragment.getContext(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            if (mFragment.getActivity() instanceof ActivityWithLoading) {
+                ((ActivityWithLoading) mFragment.getActivity()).stopLoading();
             }
         }
     }
 
     public void saveProduct(final Product product) {
-        if (Utils.isNetworkAvailable(mContext)) {
+        if (Utils.isNetworkAvailable(mFragment.getContext())) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -115,23 +114,23 @@ public class ProductControl {
                         public void onResponse(Object response) {
                             Log.d(ProductControl.class.getName(), "It Works");
                             Intent intent = new Intent(Constants.PRODUCT_SAVED_SUCCESSFULLY);
-                            mContext.sendBroadcast(intent);
+                            mFragment.getContext().sendBroadcast(intent);
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Log.d(ProductControl.class.getName(), "It does not Work");
                             Intent intent = new Intent(Constants.PRODUCT_SAVED_ERROR);
-                            mContext.sendBroadcast(intent);
+                            mFragment.getContext().sendBroadcast(intent);
                         }
                     });
-                    MainApplication.getInstance(mContext).addToRequestQueue(gsonRequest);
+                    MainApplication.getInstance(mFragment.getContext()).addToRequestQueue(gsonRequest);
                 }
             }).start();
         } else {
-            Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-            if (mContext instanceof ActivityWithLoading) {
-                ((ActivityWithLoading) mContext).stopLoading();
+            Toast.makeText(mFragment.getContext(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            if (mFragment.getActivity() instanceof ActivityWithLoading) {
+                ((ActivityWithLoading) mFragment.getActivity()).stopLoading();
             }
         }
     }

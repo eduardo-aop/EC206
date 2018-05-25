@@ -20,11 +20,11 @@ import java.util.List;
 
 public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ViewHolder> {
 
-    private ProductListActivity mActivity;
+    private ProductListFragment mFragment;
     private List<Product> mProducts;
 
-    public ProductListAdapter(ProductListActivity activity, List<Product> products) {
-        this.mActivity = activity;
+    public ProductListAdapter(ProductListFragment fragment, List<Product> products) {
+        this.mFragment = fragment;
         this.mProducts = products;
     }
 
@@ -41,7 +41,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
         Product p = mProducts.get(position);
         holder.nameTextView.setText(p.getName());
-        String price = String.format(mActivity.getResources().getString(R.string.price), p.getPrice());
+        String price = String.format(mFragment.getResources().getString(R.string.price), p.getPrice());
         holder.mPriceTextView.setText(price);
         if (p.getImage() != null) {
             holder.mProductImageView.setImageBitmap(p.getImage());
@@ -61,7 +61,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     }
 
     public void notifySpecificItemChanged(final int pos) {
-        Handler mainHandler = new Handler(mActivity.getMainLooper());
+        Handler mainHandler = new Handler(mFragment.getActivity().getMainLooper());
 
         Runnable myRunnable = new Runnable() {
             @Override

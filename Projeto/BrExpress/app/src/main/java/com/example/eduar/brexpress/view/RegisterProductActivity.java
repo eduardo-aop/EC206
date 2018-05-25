@@ -319,7 +319,7 @@ public class RegisterProductActivity extends ActivityWithLoading {
 
                             product.setPrice(Float.valueOf(cleanPriceString));
 
-                            ProductControl.getInstance(RegisterProductActivity.this).saveProduct(product);
+                            //ProductControl.getInstance(RegisterProductActivity.this).saveProduct(product);
                             break;
                         default:
                             break;
