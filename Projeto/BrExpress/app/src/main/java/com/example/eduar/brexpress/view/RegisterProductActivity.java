@@ -89,15 +89,18 @@ public class RegisterProductActivity extends ActivityWithLoading {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_save) {
-            if (validateField()) {
-                RegisterProductActivity.this.showLoading(null);
-                Utils.convertImageToBase64(this,
-                        ((BitmapDrawable)mProductImageImageView.getDrawable()).getBitmap());
-            }
-            return true;
+        switch (id) {
+            case R.id.action_save:
+                if (validateField()) {
+                    RegisterProductActivity.this.showLoading(null);
+                    Utils.convertImageToBase64(this,
+                            ((BitmapDrawable)mProductImageImageView.getDrawable()).getBitmap());
+                }
+                return true;
+            case android.R.id.home:
+                this.finish();
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -301,6 +304,7 @@ public class RegisterProductActivity extends ActivityWithLoading {
                             Toast.makeText(RegisterProductActivity.this,
                                     R.string.product_saved_success, Toast.LENGTH_LONG).show();
                             RegisterProductActivity.this.stopLoading();
+                            RegisterProductActivity.this.finish();
                             break;
                         case Constants.PRODUCT_SAVED_ERROR:
                             Toast.makeText(RegisterProductActivity.this,
@@ -315,11 +319,11 @@ public class RegisterProductActivity extends ActivityWithLoading {
                             product.setImageBase64(intent.getExtras().getString(Constants.BASE64_IMAGE));
                             String price = mProductPriceEditText.getText().toString();
                             String cleanPriceString = price.replaceAll("[R$]", "");
-                            cleanPriceString = cleanPriceString.replaceAll(",",".");
+                            cleanPriceString = cleanPriceString.replaceAll(",", ".");
 
                             product.setPrice(Float.valueOf(cleanPriceString));
 
-                            //ProductControl.getInstance(RegisterProductActivity.this).saveProduct(product);
+                            ProductControl.getInstance().saveProduct(RegisterProductActivity.this, product);
                             break;
                         default:
                             break;

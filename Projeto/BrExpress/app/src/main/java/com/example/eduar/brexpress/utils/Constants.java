@@ -7,7 +7,7 @@ package com.example.eduar.brexpress.utils;
 public class Constants {
 
     //server ip and port address
-    public static String SERVER_URL = "http://192.168.1.8:8000/";
+    public static String SERVER_URL = "http://192.168.0.12:8000/";
 
     //
     public static final String CONVERT_IMAGE_TO_BASE64_RECEIVER = "convertImageToBase64";
@@ -16,6 +16,14 @@ public class Constants {
     public static final String PRODUCT_SAVED_SUCCESSFULLY = "productSavedSuccessfully";
 
     public static final String PRODUCT_SAVED_ERROR = "productSavedError";
+
+    public static final String SHARED_PREFERENCES = "myPref";
+
+    public static final String USER_NAME = "userName";
+    public static final String USER_TYPE = "userType";
+
+    public static final String DIALOG_ACTION_CLICK = "dialogActionClick";
+    public static final String CONFIRMED_ACTION = "confirmedAction";
 
     public static final String PRODUCT_LOADED_SUCCESS = "productLoadedSuccess";
     public static final String ALL_PRODUCTS_LOADED = "allProductsLoaded";

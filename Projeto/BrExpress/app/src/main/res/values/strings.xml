@@ -13,6 +13,7 @@
     <string name="product_description">Descrição do Produto</string>
     <string name="product_picture">Foto do Produto</string>
     <string name="save_data">Salvar Dados</string>
+    <string name="delete_data">Remover Dados</string>
     <string name="choose_pictures">Escolher mais fotos</string>
     <string name="delete">Apagar</string>
     <string name="min_product_name_length">Campo nome deve conter no mínimo 5 letras</string>
@@ -24,5 +25,15 @@
     <string name="product_saved_error">Falha ao cadastrar produto. Tente Novamente!</string>
     <string name="no_internet_connection">Sem conexão com a internet.</string>
     <string name="failed_to_load_products">Falha ao carregar produtos</string>
-    <string name="price">R$ %1$f</string>
+    <string name="price">R$ %1$.2f</string>
+    <string name="products">Produtos</string>
+    <string name="clients">Clientes</string>
+    <string name="employee">Funcionários</string>
+    <string name="shipping">Transportadora</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="confirm_delete_product">Realmente deseja remover estes produtos.
+        Esta Ação não pode ser desfeita.</string>
+
+    <string name="buy">Comprar</string>
 </resources>

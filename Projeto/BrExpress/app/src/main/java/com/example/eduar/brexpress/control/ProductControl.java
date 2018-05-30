@@ -32,11 +32,7 @@ import java.util.List;
 public class ProductControl {
     private static ProductControl mInstance = null;
 
-    private static FragmentWithLoading mFragment = null;
-
-    public static ProductControl getInstance(FragmentWithLoading fragment) {
-        mFragment = fragment;
-
+    public static ProductControl getInstance() {
         if (mInstance == null)
             mInstance = new ProductControl();
         return mInstance;
@@ -46,8 +42,8 @@ public class ProductControl {
 
     }
 
-    public void getAllProducts() {
-        if (Utils.isNetworkAvailable(mFragment.getContext())) {
+    public void getAllProducts(final FragmentWithLoading fragment) {
+        if (Utils.isNetworkAvailable(fragment.getContext())) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -59,51 +55,33 @@ public class ProductControl {
                             Gson gson = new Gson();
                             Type listType = new TypeToken<List<Product>>(){}.getType();
                             List<Product> productList = gson.fromJson(response.toString(), listType);
-                            if (mFragment instanceof ProductListFragment) {
-                                ((ProductListFragment) mFragment).allProductsLoaded(productList);
+                            if (fragment instanceof ProductListFragment) {
+                                ((ProductListFragment) fragment).allProductsLoaded(productList);
                             }
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Log.d(ProductControl.class.getName(), "It does not Work");
-                            if (mFragment instanceof ProductListFragment) {
-                                ((ProductListFragment) mFragment).allProductsLoadedError();
+                            if (fragment instanceof ProductListFragment) {
+                                ((ProductListFragment) fragment).allProductsLoadedError();
                             }
                         }
                     });
-//                    GsonRequest gsonRequest = new GsonRequest(Request.Method.GET, url, List<Product>(){}.getClass(), null,
-//                            null, new Response.Listener() {
-//                        @Override
-//                        public void onResponse(Object response) {
-//                            Log.d(ProductControl.class.getName(), "It Works");
-//                            Intent intent = new Intent(Constants.PRODUCT_LOADED_SUCCESS);
-//                            List<Product> productList = (ArrayList) response;
-//                            intent.putExtra(Constants.ALL_PRODUCTS_LOADED, (Serializable) productList);
-//                            mContext.sendBroadcast(intent);
-//                        }
-//                    }, new Response.ErrorListener() {
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            Log.d(ProductControl.class.getName(), "It does not Work");
-//                            Intent intent = new Intent(Constants.PRODUCT_LOADED_ERROR);
-//                            mContext.sendBroadcast(intent);
-//                        }
-//                    });
 
-                    MainApplication.getInstance(mFragment.getContext()).addToRequestQueue(jsonArrayRequest);
+                    MainApplication.getInstance(fragment.getContext()).addToRequestQueue(jsonArrayRequest);
                 }
             }).start();
         } else {
-            Toast.makeText(mFragment.getContext(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-            if (mFragment.getActivity() instanceof ActivityWithLoading) {
-                ((ActivityWithLoading) mFragment.getActivity()).stopLoading();
+            Toast.makeText(fragment.getContext(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            if (fragment.getActivity() instanceof ActivityWithLoading) {
+                ((ActivityWithLoading) fragment.getActivity()).stopLoading();
             }
         }
     }
 
-    public void saveProduct(final Product product) {
-        if (Utils.isNetworkAvailable(mFragment.getContext())) {
+    public void saveProduct(final ActivityWithLoading activity, final Product product) {
+        if (Utils.isNetworkAvailable(activity)) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -114,24 +92,22 @@ public class ProductControl {
                         public void onResponse(Object response) {
                             Log.d(ProductControl.class.getName(), "It Works");
                             Intent intent = new Intent(Constants.PRODUCT_SAVED_SUCCESSFULLY);
-                            mFragment.getContext().sendBroadcast(intent);
+                            activity.sendBroadcast(intent);
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Log.d(ProductControl.class.getName(), "It does not Work");
                             Intent intent = new Intent(Constants.PRODUCT_SAVED_ERROR);
-                            mFragment.getContext().sendBroadcast(intent);
+                            activity.sendBroadcast(intent);
                         }
                     });
-                    MainApplication.getInstance(mFragment.getContext()).addToRequestQueue(gsonRequest);
+                    MainApplication.getInstance(activity).addToRequestQueue(gsonRequest);
                 }
             }).start();
         } else {
-            Toast.makeText(mFragment.getContext(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-            if (mFragment.getActivity() instanceof ActivityWithLoading) {
-                ((ActivityWithLoading) mFragment.getActivity()).stopLoading();
-            }
+            Toast.makeText(activity, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            activity.stopLoading();
         }
     }
 }

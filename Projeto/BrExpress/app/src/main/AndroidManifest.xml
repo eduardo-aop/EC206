@@ -21,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.ProductImagesActivity" />
+        <activity android:name=".view.RegisterProductActivity" />
     </application>
 
 </manifest>

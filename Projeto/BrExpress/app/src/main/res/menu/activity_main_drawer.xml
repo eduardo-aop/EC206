@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item android:id="@+id/product"
+            android:icon="@drawable/ic_product"
+            android:title="@string/products" />
+        <item android:id="@+id/employee"
+            android:icon="@drawable/ic_employee"
+            android:title="@string/employee" />
+        <item android:id="@+id/client"
+            android:icon="@drawable/ic_client"
+            android:title="@string/clients" />
+        <item android:id="@+id/shipping"
+            android:icon="@drawable/ic_shipping"
+            android:title="@string/shipping" />
+    </group>
+</menu>
