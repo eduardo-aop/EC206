@@ -25,7 +25,7 @@ public class ActivityWithLoading extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
-    public void showLoading(String text) {
+    public void startLoading(String text) {
         stopLoading();
 
         View view = LayoutInflater.from(this).inflate(R.layout.progress_dialog, null);

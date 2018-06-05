@@ -7,7 +7,7 @@ package com.example.eduar.brexpress.utils;
 public class Constants {
 
     //server ip and port address
-    public static String SERVER_URL = "http://192.168.0.12:8000/";
+    public static String SERVER_URL = "http://192.168.0.14:8000/";
 
     //
     public static final String CONVERT_IMAGE_TO_BASE64_RECEIVER = "convertImageToBase64";

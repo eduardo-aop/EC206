@@ -1,11 +1,13 @@
-package com.example.eduar.brexpress.view;
+package com.example.eduar.brexpress.view.product;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -52,6 +54,9 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         String price = String.format(mFragment.getResources().getString(R.string.price), p.getPrice());
         holder.mPriceTextView.setText(price);
         holder.mProductImageView.setImageBitmap(null);
+
+        priceDiscountStyle(holder, p);
+
         if (p.getImage() != null) {
             holder.mProductImageView.setImageBitmap(p.getImage());
         }
@@ -61,14 +66,22 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             public void onClick(View view) {
                 if (isEditing) {
                     containerStyle(holder, selectProduct(p.getId()));
-                } else if (!isAdmin) {
-                    Intent i = new Intent(mFragment.getActivity(), ProductDetailActivity.class);
-                    mFragment.getActivity().startActivity(i);
+                } else {
+                    if (isAdmin) {
+                        Intent i = new Intent(mFragment.getActivity(), RegisterProductActivity.class);
+                        i.putExtra("isEditing", true);
+                        i.putExtra("prodcutId", p.getId());
+                        mFragment.getActivity().startActivity(i);
+                    } else {
+                        Intent i = new Intent(mFragment.getActivity(), ProductDetailActivity.class);
+                        i.putExtra("productId", p.getId());
+                        mFragment.getActivity().startActivity(i);
+                    }
                 }
             }
         });
 
-        if (!isAdmin) {
+        if (isAdmin) {
             holder.mContainer.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -78,6 +91,25 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             });
         }
         containerStyle(holder, mSelectedProducts.contains(p.getId()));
+    }
+
+    private void priceDiscountStyle(ViewHolder holder, Product p) {
+        if (p.getDiscount() > 0) {
+            holder.mDiscountContainer.setVisibility(View.VISIBLE);
+            String discount = String.format(mFragment.getResources().getString(R.string.discount_image), p.getDiscount());
+            holder.mDiscountTextView.setText(discount);
+            holder.mPriceTextView.setPaintFlags(holder.mPriceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.mPriceTextView.setTextColor(mFragment.getResources().getColor(android.R.color.darker_gray));
+            holder.mPriceDiscountTextView.setVisibility(View.VISIBLE);
+            String priceWithDiscount = String.format(mFragment.getResources().getString(R.string.price),
+                    p.getPriceWithDiscount());
+            holder.mPriceDiscountTextView.setText(priceWithDiscount);
+        } else {
+            holder.mDiscountContainer.setVisibility(View.GONE);
+            holder.mPriceTextView.setTextColor(mFragment.getResources().getColor(android.R.color.black));
+            holder.mPriceTextView.setPaintFlags(holder.mPriceTextView.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.mPriceDiscountTextView.setVisibility(View.GONE);
+        }
     }
 
     private void containerStyle(ViewHolder holder, boolean selected) {
@@ -139,13 +171,19 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         private ImageView mProductImageView;
         private TextView nameTextView;
         private TextView mPriceTextView;
+        private TextView mPriceDiscountTextView;
+        private TextView mDiscountTextView;
         private LinearLayout mContainer;
+        private FrameLayout mDiscountContainer;
 
         private ViewHolder(View card) {
             super(card);
             mContainer = card.findViewById(R.id.container);
+            mDiscountContainer = card.findViewById(R.id.discount_container);
             nameTextView = card.findViewById(R.id.name_text);
             mPriceTextView = card.findViewById(R.id.price_text);
+            mPriceDiscountTextView = card.findViewById(R.id.price_discount_text);
+            mDiscountTextView = card.findViewById(R.id.discount_text);
             mProductImageView = card.findViewById(R.id.product_image);
         }
     }

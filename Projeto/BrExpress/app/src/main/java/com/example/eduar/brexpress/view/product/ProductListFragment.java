@@ -1,8 +1,7 @@
-package com.example.eduar.brexpress.view;
+package com.example.eduar.brexpress.view.product;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +22,8 @@ import com.example.eduar.brexpress.control.ProductControl;
 import com.example.eduar.brexpress.model.Product;
 import com.example.eduar.brexpress.service.ImageDownloader;
 import com.example.eduar.brexpress.utils.Utils;
+import com.example.eduar.brexpress.view.FragmentWithLoading;
+import com.example.eduar.brexpress.view.GridSpacingItemDecoration;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -49,7 +50,6 @@ public class ProductListFragment extends FragmentWithLoading {
 
         mProductList = new ArrayList<>();
 
-
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mFab = view.findViewById(R.id.fab);
@@ -72,9 +72,13 @@ public class ProductListFragment extends FragmentWithLoading {
     public void onResume() {
         super.onResume();
 
-        isAdmin = !Utils.getUserType(this.getContext());
+        isAdmin = Utils.getUserType(this.getContext());
+        setHasOptionsMenu(isAdmin);
+
         if (isAdmin) {
-            setHasOptionsMenu(true);
+            mFab.setVisibility(View.VISIBLE);
+        } else {
+            mFab.setVisibility(View.GONE);
         }
         loadProducts();
         this.showLoading(null);

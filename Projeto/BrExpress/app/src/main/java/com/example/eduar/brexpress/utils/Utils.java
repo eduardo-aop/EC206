@@ -117,7 +117,7 @@ public class Utils {
     public static boolean getUserType(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
         boolean isAdming = prefs.getBoolean(Constants.USER_TYPE, false);
-        return isAdming;
+        return !isAdming;
     }
 
     public static String getUser(Context context) {

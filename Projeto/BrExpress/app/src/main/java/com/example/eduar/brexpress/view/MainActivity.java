@@ -1,6 +1,5 @@
 package com.example.eduar.brexpress.view;
 
-import android.content.ClipData;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.eduar.brexpress.R;
+import com.example.eduar.brexpress.view.product.ProductListFragment;
 
 public class MainActivity extends AppCompatActivity {
 

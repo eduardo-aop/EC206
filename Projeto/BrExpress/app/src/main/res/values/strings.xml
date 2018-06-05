@@ -17,6 +17,7 @@
     <string name="choose_pictures">Escolher mais fotos</string>
     <string name="delete">Apagar</string>
     <string name="min_product_name_length">Campo nome deve conter no mínimo 5 letras</string>
+    <string name="min_product_price">Campo preço não pode ser zero</string>
     <string name="max_product_qtd_available">É permitido no máximo 999 unidades do produto</string>
     <string name="max_product_discount_available">É permitido no máximo 99% de desconto</string>
     <string name="selected_a_picture">Selecione uma foto para o produto</string>
@@ -26,6 +27,7 @@
     <string name="no_internet_connection">Sem conexão com a internet.</string>
     <string name="failed_to_load_products">Falha ao carregar produtos</string>
     <string name="price">R$ %1$.2f</string>
+    <string name="discount_image">%1$.0f%% Off</string>
     <string name="products">Produtos</string>
     <string name="clients">Clientes</string>
     <string name="employee">Funcionários</string>
