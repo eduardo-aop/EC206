@@ -37,7 +37,7 @@ app.post('/saveClient', function(req, res) {
 	});
 });
 
-app.get('/validLogin', function(req, res) {
+app.get('/doLogin', function(req, res) {
     console.log(req.body);
 
 	var id = 0;
