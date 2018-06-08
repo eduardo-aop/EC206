@@ -73,7 +73,7 @@ public class LoginActivity extends ActivityWithLoading {
                 LoginActivity.this.finish();
             }
         });
-         
+        
         mNewAccButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
