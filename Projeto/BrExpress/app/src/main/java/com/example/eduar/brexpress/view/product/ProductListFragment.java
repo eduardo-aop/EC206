@@ -1,13 +1,18 @@
-package com.example.eduar.brexpress.view;
+package com.example.eduar.brexpress.view.product;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -17,6 +22,8 @@ import com.example.eduar.brexpress.control.ProductControl;
 import com.example.eduar.brexpress.model.Product;
 import com.example.eduar.brexpress.service.ImageDownloader;
 import com.example.eduar.brexpress.utils.Utils;
+import com.example.eduar.brexpress.view.FragmentWithLoading;
+import com.example.eduar.brexpress.view.GridSpacingItemDecoration;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -32,22 +39,22 @@ public class ProductListFragment extends FragmentWithLoading {
     private SwipeRefreshLayout mSwipeRefresh;
     private ProductListAdapter mAdapter;
     private List<Product> mProductList;
+    private FloatingActionButton mFab;
+    private boolean isAdmin = false;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.activity_products_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_products_list, container, false);
 
         mProductList = new ArrayList<>();
 
-        loadProducts();
-
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
+        mFab = view.findViewById(R.id.fab);
 
         addListeners();
-        this.showLoading(null);
 
         mAdapter = new ProductListAdapter(this, mProductList);
 
@@ -61,6 +68,48 @@ public class ProductListFragment extends FragmentWithLoading {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        isAdmin = Utils.getUserType(this.getContext());
+        setHasOptionsMenu(isAdmin);
+
+        if (isAdmin) {
+            mFab.setVisibility(View.VISIBLE);
+        } else {
+            mFab.setVisibility(View.GONE);
+        }
+        loadProducts();
+        this.showLoading(null);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        if (mAdapter.isEditing()) {
+            this.getActivity().getMenuInflater().inflate(R.menu.menu_delete_product, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        switch (id) {
+            case R.id.action_delete_product:
+                Utils.createDialog(this.getContext(), R.string.confirm_delete_product);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void addListeners() {
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -69,11 +118,19 @@ public class ProductListFragment extends FragmentWithLoading {
                 loadProducts();
             }
         });
+
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), RegisterProductActivity.class);
+                getActivity().startActivity(i);
+            }
+        });
     }
 
     private void loadProducts() {
-        ProductControl productControl = ProductControl.getInstance(this);
-        productControl.getAllProducts();
+        ProductControl productControl = ProductControl.getInstance();
+        productControl.getAllProducts(this);
     }
 
     public void allProductsLoaded(List<Product> products) {
@@ -85,7 +142,7 @@ public class ProductListFragment extends FragmentWithLoading {
 
         for (Product p : mProductList) {
             if (p.getImage() == null) {
-                new ImageDownloader().execute(p.getId(), this);
+                new ImageDownloader().execute(p.getId(), this, "productImage");
             }
         }
     }

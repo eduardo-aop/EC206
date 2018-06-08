@@ -20,6 +20,9 @@ public class Product {
     @SerializedName("name")
     private String mName;
 
+    @SerializedName("qtd")
+    private int mQtd;
+
     @SerializedName("price")
     private Float mPrice;
 
@@ -59,6 +62,14 @@ public class Product {
 
     public void setPrice(Float mPrice) {
         this.mPrice = mPrice;
+    }
+
+    public int getQtd() {
+        return mQtd;
+    }
+
+    public void setQtd(int mQtd) {
+        this.mQtd = mQtd;
     }
 
     public Float getDiscount() {
@@ -104,5 +115,11 @@ public class Product {
     public String converToJson() {
         Gson gson = new Gson();
         return gson.toJson(this);
+    }
+
+    public Float getPriceWithDiscount() {
+        Float disc = (100 - this.getDiscount()) / 100;
+        Float price = (this.getPrice() * disc);
+        return price;
     }
 }

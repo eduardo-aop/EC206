@@ -1,4 +1,4 @@
-package com.example.eduar.brexpress.view;
+package com.example.eduar.brexpress.view.product;
 
 import android.Manifest;
 import android.app.Activity;
@@ -9,9 +9,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -28,9 +30,12 @@ import android.widget.Toast;
 import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.control.ProductControl;
 import com.example.eduar.brexpress.model.Product;
+import com.example.eduar.brexpress.service.ImageDownloader;
 import com.example.eduar.brexpress.utils.Constants;
 import com.example.eduar.brexpress.utils.Utils;
+import com.example.eduar.brexpress.view.ActivityWithLoading;
 
+import java.io.InputStream;
 import java.text.NumberFormat;
 
 /**
@@ -54,11 +59,32 @@ public class RegisterProductActivity extends ActivityWithLoading {
 
     private BroadcastReceiver mReceiver;
 
+    private boolean mIsEditing = false;
+    private Product mEditingProduct = null;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_register_product);
+
+        initAllComponents();
+        addComponentsListeners();
+        broadcastReceiver();
+        registerBroadcasts();
+
+        Bundle b = getIntent().getExtras();
+        int id;
+
+        if (b != null) {
+            mIsEditing = b.getBoolean("isEditing");
+            id = b.getInt("prodcutId");
+
+            if (mIsEditing) {
+                mSelectedPicture = true;
+                ProductControl.getInstance().getProductById(this, id);
+            }
+        }
 
         hasCameraPermission();
 
@@ -68,10 +94,6 @@ public class RegisterProductActivity extends ActivityWithLoading {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        initAllComponents();
-        addComponentsListeners();
-        broadcastReceiver();
-        registerBroadcasts();
     }
 
     @Override
@@ -89,15 +111,18 @@ public class RegisterProductActivity extends ActivityWithLoading {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_save) {
-            if (validateField()) {
-                RegisterProductActivity.this.showLoading(null);
-                Utils.convertImageToBase64(this,
-                        ((BitmapDrawable)mProductImageImageView.getDrawable()).getBitmap());
-            }
-            return true;
+        switch (id) {
+            case R.id.action_save:
+                if (validateField()) {
+                    RegisterProductActivity.this.startLoading(null);
+                    Utils.convertImageToBase64(this,
+                            ((BitmapDrawable)mProductImageImageView.getDrawable()).getBitmap());
+                }
+                return true;
+            case android.R.id.home:
+                this.finish();
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -166,7 +191,6 @@ public class RegisterProductActivity extends ActivityWithLoading {
     private boolean checkEmptyFields() {
         if (mProductNameEditText.getText().toString().isEmpty()
                 || mProductPriceEditText.getText().toString().isEmpty()
-                || mProductDiscountEditText.getText().toString().isEmpty()
                 || mProductQtdEditText.getText().toString().isEmpty()
                 || mProductDescriptionEditText.getText().toString().isEmpty()) {
             Toast.makeText(this, R.string.fill_all_fields, Toast.LENGTH_LONG).show();
@@ -185,6 +209,14 @@ public class RegisterProductActivity extends ActivityWithLoading {
         }
         if (mProductNameEditText.getText().toString().length() < 5) {
             mProductNameEditText.setError(getResources().getString(R.string.min_product_name_length));
+            return false;
+        }
+        String price = mProductPriceEditText.getText().toString();
+        String cleanPriceString = price.replaceAll("[R$]", "");
+        cleanPriceString = cleanPriceString.replaceAll("[.]", "");
+        cleanPriceString = cleanPriceString.replaceAll(",", ".");
+        if (Float.valueOf(cleanPriceString) <= 0) {
+            mProductPriceEditText.setError(getResources().getString(R.string.min_product_price));
             return false;
         }
         if (mProductQtdEditText.getText().toString().length() > 3) {
@@ -290,6 +322,36 @@ public class RegisterProductActivity extends ActivityWithLoading {
         }
     }
 
+    public void productDetailLoaded(Product product) {
+        this.stopLoading();
+        mEditingProduct = product;
+
+        mProductNameEditText.setText(product.getName());
+        mProductDescriptionEditText.setText(product.getDescription());
+        mProductDiscountEditText.setText(String.valueOf(product.getDiscount()));
+        mProductQtdEditText.setText(String.valueOf(product.getQtd()));
+        mProductPriceEditText.setText(String.valueOf(product.getPrice()));
+
+        new ImageDownloader().execute(product.getId(), this, "productImage");
+    }
+
+    public void productDetailLoadedError() {
+        this.stopLoading();
+        Toast.makeText(this, R.string.failed_to_load_products, Toast.LENGTH_LONG).show();
+    }
+
+    public void imageDownloaded(InputStream inputStream, int id) {
+        mEditingProduct.setImage(BitmapFactory.decodeStream(inputStream));
+        Handler mainHandler = new Handler(getMainLooper());
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mProductImageImageView.setImageBitmap(mEditingProduct.getImage());
+            }
+        };
+        mainHandler.post(myRunnable);
+    }
+
     private void broadcastReceiver() {
         mReceiver = new BroadcastReceiver() {
             @Override
@@ -301,6 +363,7 @@ public class RegisterProductActivity extends ActivityWithLoading {
                             Toast.makeText(RegisterProductActivity.this,
                                     R.string.product_saved_success, Toast.LENGTH_LONG).show();
                             RegisterProductActivity.this.stopLoading();
+                            RegisterProductActivity.this.finish();
                             break;
                         case Constants.PRODUCT_SAVED_ERROR:
                             Toast.makeText(RegisterProductActivity.this,
@@ -308,18 +371,49 @@ public class RegisterProductActivity extends ActivityWithLoading {
                             RegisterProductActivity.this.stopLoading();
                             break;
                         case Constants.CONVERT_IMAGE_TO_BASE64_RECEIVER:
-                            Product product = new Product();
+                            Product product;
+
+                            if (mIsEditing) {
+                                product = mEditingProduct;
+                            } else {
+                                product = new Product();
+                            }
+
                             product.setName(mProductNameEditText.getText().toString());
-                            product.setDiscount(Float.valueOf(mProductDiscountEditText.getText().toString()));
+
+                            String discountText = mProductDiscountEditText.getText().toString().trim();
+                            if (discountText.isEmpty() || discountText.equals("")) {
+                                discountText = "0";
+                            }
+                            product.setDiscount(Float.valueOf(discountText));
+
                             product.setDescription(mProductDescriptionEditText.getText().toString());
                             product.setImageBase64(intent.getExtras().getString(Constants.BASE64_IMAGE));
+
                             String price = mProductPriceEditText.getText().toString();
                             String cleanPriceString = price.replaceAll("[R$]", "");
-                            cleanPriceString = cleanPriceString.replaceAll(",",".");
+                            cleanPriceString = cleanPriceString.replaceAll("[.]", "");
+                            cleanPriceString = cleanPriceString.replaceAll(",", ".");
 
                             product.setPrice(Float.valueOf(cleanPriceString));
+                            product.setQtd(Integer.valueOf(mProductQtdEditText.getText().toString().trim()));
 
-                            //ProductControl.getInstance(RegisterProductActivity.this).saveProduct(product);
+                            if (mIsEditing) {
+                                ProductControl.getInstance().updateProduct(RegisterProductActivity.this, product);
+                            } else {
+                                ProductControl.getInstance().saveProduct(RegisterProductActivity.this, product);
+                            }
+                            break;
+                        case Constants.PRODUCT_UPDATED_SUCCESSFULLY:
+                            Toast.makeText(RegisterProductActivity.this,
+                                    R.string.product_updated_success, Toast.LENGTH_LONG).show();
+                            RegisterProductActivity.this.stopLoading();
+                            RegisterProductActivity.this.finish();
+                            break;
+                        case Constants.PRODUCT_UPDATED_ERROR:
+                            Toast.makeText(RegisterProductActivity.this,
+                                    R.string.product_updated_error, Toast.LENGTH_LONG).show();
+                            RegisterProductActivity.this.stopLoading();
                             break;
                         default:
                             break;
@@ -335,7 +429,9 @@ public class RegisterProductActivity extends ActivityWithLoading {
      */
     private void registerBroadcasts() {
         registerReceiver(mReceiver, new IntentFilter(Constants.PRODUCT_SAVED_SUCCESSFULLY));
+        registerReceiver(mReceiver, new IntentFilter(Constants.PRODUCT_UPDATED_SUCCESSFULLY));
         registerReceiver(mReceiver, new IntentFilter(Constants.PRODUCT_SAVED_ERROR));
+        registerReceiver(mReceiver, new IntentFilter(Constants.PRODUCT_UPDATED_ERROR));
         registerReceiver(mReceiver, new IntentFilter(Constants.CONVERT_IMAGE_TO_BASE64_RECEIVER));
         registerReceiver(mReceiver, new IntentFilter(Constants.BASE64_IMAGE));
     }

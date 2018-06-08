@@ -22,34 +22,47 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             style="@style/LoginEditText"
             android:hint="@string/email"/>
 
         <EditText
+            android:id="@+id/pwd"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             style="@style/LoginEditText"
             android:hint="@string/password"/>
 
         <Button
+            android:id="@+id/login_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             style="@style/LoginEditText"
+            android:enabled="true"
             android:text="@string/login"
             android:background="@android:color/holo_green_light"
-            android:textColor="@android:color/white"
             android:layout_marginTop="20dp"/>
-        <TextView
+
+        <Button
+            android:id="@+id/back_button"
+            style="@style/PrimaryButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/forget_password"
-            android:layout_gravity="center"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/back"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/create_acc_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            style="@style/PrimaryButton"
+            android:enabled="true"
+            android:text="@string/create_new_acc"
+            android:background="@android:color/transparent"
             android:layout_marginTop="20dp"/>
+
     </LinearLayout>
-
-
 </RelativeLayout>

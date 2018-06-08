@@ -1,7 +1,10 @@
 package com.example.eduar.brexpress.utils;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -13,6 +16,8 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.TypedValue;
 
+import com.example.eduar.brexpress.R;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -22,6 +27,8 @@ import java.io.InputStream;
  */
 
 public class Utils {
+
+    private static SharedPreferences.Editor mEditor;
 
     public static boolean checkIfHasCamera(Context context) {
         PackageManager pm = context.getPackageManager();
@@ -81,5 +88,61 @@ public class Utils {
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public static void createDialog(final Context context, int title) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Intent intent = new Intent(Constants.DIALOG_ACTION_CLICK);
+                intent.putExtra(Constants.CONFIRMED_ACTION, true);
+                context.sendBroadcast(intent);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(Constants.DIALOG_ACTION_CLICK);
+                intent.putExtra(Constants.CONFIRMED_ACTION, false);
+                context.sendBroadcast(intent);
+            }
+        });
+
+        builder.setTitle(title);
+
+        builder.create();
+    }
+
+    public static boolean getUserType(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        boolean isAdming = prefs.getBoolean(Constants.USER_TYPE, false);
+        return !isAdming;
+    }
+
+    public static String getUserName(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        String userName = prefs.getString(Constants.USER_NAME, null);
+        return userName;
+    }
+
+    public static int getUserId(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        int userId = prefs.getInt(Constants.USER_ID, -1);
+        return userId;
+    }
+
+    public static void saveUser(Context context, int id, String name, boolean isAdmin) {
+        mEditor = context.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
+        mEditor.putString(Constants.USER_NAME, name);
+        mEditor.putInt(Constants.USER_ID, id);
+        mEditor.putBoolean(Constants.USER_TYPE, isAdmin);
+        mEditor.apply();
+    }
+
+    public static void clearUserData(Context context) {
+        mEditor = context.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
+        mEditor.clear();
+        mEditor.apply();
     }
 }
