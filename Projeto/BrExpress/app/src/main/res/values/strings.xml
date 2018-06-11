@@ -36,21 +36,46 @@
     <string name="selected_a_picture">Selecione uma foto para o produto</string>
     <string name="fill_all_fields">Preencha todos os campos</string>
     <string name="product_saved_success">Produto cadastrado com sucesso!</string>
-    <string name="product_updated_success">Produto atualizado com sucesso!</string>
     <string name="product_saved_error">Falha ao cadastrar produto. Tente Novamente!</string>
+    <string name="product_updated_success">Produto atualizado com sucesso!</string>
     <string name="product_updated_error">Falha ao atualizar produto. Tente Novamente!</string>
+    <string name="client_saved_success">Cadastrado realizado com sucesso!</string>
+    <string name="client_saved_error">Falha ao cadastrar. Tente Novamente!</string>
+    <string name="client_updated_success">Perfil atualizado com sucesso!</string>
+    <string name="client_updated_error">Falha ao atualizar perfil. Tente Novamente!</string>
     <string name="no_internet_connection">Sem conexão com a internet.</string>
     <string name="failed_to_load_products">Falha ao carregar produtos</string>
     <string name="price">R$ %1$.2f</string>
+    <string name="valor">Valor</string>
     <string name="discount_image">%1$.0f%% Off</string>
     <string name="products">Produtos</string>
     <string name="clients">Clientes</string>
     <string name="employee">Funcionários</string>
     <string name="shipping">Transportadora</string>
+    <string name="home">Principal</string>
+    <string name="my_account">Minha Conta</string>
+    <string name="my_orders">Meus Pedidos</string>
+    <string name="support">Suporte</string>
+    <string name="logout">Sair</string>
+    <string name="see_profile">Ver perfil</string>
+    <string name="do_login">Faça login</string>
+    <string name="join_us">Junte-se a nós</string>
+    <string name="br">BR</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
     <string name="confirm_delete_product">Realmente deseja remover estes produtos.
         Esta Ação não pode ser desfeita.</string>
+    <string name="remove">Remover</string>
+    <string name="products_removed_success">Produtos removidos com sucesso!</string>
+    <string name="products_removed_error">Falha ao remover produtos. Tente novamente!</string>
 
     <string name="buy">Comprar</string>
+
+    <string name="card_name">Nome</string>
+    <string name="card_number">Número</string>
+    <string name="card_cvv">CVV</string>
+    <string name="card_date_expires">Data</string>
+    <string name="pay">Pagar</string>
+
+
 </resources>

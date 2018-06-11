@@ -18,11 +18,20 @@
         android:orientation="horizontal"
         android:layout_marginTop="20dp">
 
-        <ImageView
+        <RelativeLayout
             android:id="@+id/nav_header_imageView"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:src="@mipmap/ic_launcher" />
+            android:background="@drawable/selector_rounded_border">
+            <TextView
+                android:id="@+id/first_letter_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BR"
+                android:textSize="35dp"
+                android:layout_centerInParent="true"
+                android:textColor="@android:color/black"/>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/user_container"
@@ -35,14 +44,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/down_arrow"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/name_nav_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Eduardo Pereira"
+                    android:text="@string/do_login"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textSize="20dp" />
 
@@ -50,16 +58,9 @@
                     android:id="@+id/nav_header_textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Ver perfil"
+                    android:text="@string/join_us"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
             </LinearLayout>
-
-            <ImageView
-                android:id="@+id/down_arrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_down_arrow" />
 
         </RelativeLayout>
 

@@ -38,7 +38,7 @@
                             android:id="@+id/selected_product_image"
                             android:layout_width="match_parent"
                             android:layout_height="170dp"
-                            android:src="@drawable/no_product_image"
+                            android:src="@drawable/no_image_available"
                             android:adjustViewBounds="true"
                             android:alpha="1"/>
                     </LinearLayout>

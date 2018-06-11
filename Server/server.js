@@ -37,17 +37,21 @@ app.post('/saveClient', function(req, res) {
 	});
 });
 
-app.get('/validLogin', function(req, res) {
+app.post('/doLogin', function(req, res) {
     console.log(req.body);
 
 	var id = 0;
-	var sql = 'SELECT id, name, email FROM client WHERE email = ? AND pwd = ?';
+	var sql = 'SELECT * FROM client WHERE email = ? AND pwd = ?';
+	var result = null;
+	
 	con.query(sql, [req.body.email, req.body.pwd], function (err, result, fields) {
-		if (err) throw err;
+		if (err) throw err
 		
+		var resp = result[0];
 		if (result.length > 0) {
-			console.log(result);
-			res.send(result);
+			resp['type'] = resp['worker_id'] != null
+			console.log(resp)
+			res.send(resp);
 		} else {
 			res.status(404);
 		}
@@ -87,16 +91,17 @@ app.put('/updateProduct', function(req, res) {
 	});
 });
 
-app.post('/deleteProduct', function(req, res) {
+app.post('/deleteProducts', function(req, res) {
     console.log(req.body);
 
-	var id = req.body.id;
-	var sql = 'DELETE FROM product WHERE id in (?)';
-	console.log(req.body.price);
-	con.query(sql, [id], function (err, result, fields) {
+	var ids = JSON.parse(req.body.ids);
+	console.log(ids);
+	var sql = 'DELETE FROM product WHERE id IN (?)';
+	con.query(sql, [ids], function (err, result, fields) {
 		if (err) throw err;
 	
-		res.end();
+	    console.log(result);
+		res.send(result);
 	});
 });
 
@@ -131,7 +136,7 @@ app.get('/productImage', function(req, res){
 	res.download(file); // Set disposition and send it.
 });
 
-var server = app.listen(8000, '192.168.0.14', function () {
+var server = app.listen(8000, '192.168.0.12', function () {
 	var host = server.address().address
 	var port = server.address().port
 

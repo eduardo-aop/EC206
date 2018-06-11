@@ -7,15 +7,13 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.eduar.brexpress.R;
-import com.example.eduar.brexpress.model.Client;
-import com.example.eduar.brexpress.model.Product;
+import com.example.eduar.brexpress.model.User;
 import com.example.eduar.brexpress.service.GsonRequest;
 import com.example.eduar.brexpress.utils.Constants;
 import com.example.eduar.brexpress.utils.Utils;
 import com.example.eduar.brexpress.view.ActivityWithLoading;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,25 +36,25 @@ public class ClientControl {
 
     }
 
-    public void saveClient(final ActivityWithLoading activity, final Client client) {
+    public void saveClient(final ActivityWithLoading activity, final User user) {
         if (Utils.isNetworkAvailable(activity)) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     String url = Constants.SERVER_URL + "saveClient";
-                    GsonRequest gsonRequest = new GsonRequest(Request.Method.POST, url, Client.class, null,
-                            client.converToJson(), new Response.Listener() {
+                    GsonRequest gsonRequest = new GsonRequest(Request.Method.POST, url, User.class, null,
+                            user.converToJson(), new Response.Listener() {
                         @Override
                         public void onResponse(Object response) {
                             Log.d(ClientControl.class.getName(), "Save Works");
-                            Intent intent = new Intent(Constants.PRODUCT_SAVED_SUCCESSFULLY);
+                            Intent intent = new Intent(Constants.CLIENT_SAVED_SUCCESSFULLY);
                             activity.sendBroadcast(intent);
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Log.d(ClientControl.class.getName(), "Save does not Work");
-                            Intent intent = new Intent(Constants.PRODUCT_SAVED_ERROR);
+                            Intent intent = new Intent(Constants.CLIENT_SAVED_ERROR);
                             activity.sendBroadcast(intent);
                         }
                     });
@@ -83,11 +81,18 @@ public class ClientControl {
                     }
 
                     String url = Constants.SERVER_URL + "doLogin";
-                    GsonRequest gsonRequest = new GsonRequest(Request.Method.POST, url, Client.class, null,
-                            jsonObject.toString(), new Response.Listener() {
+                    JsonObjectRequest jsonRequest = new JsonObjectRequest(url, jsonObject,
+                            new Response.Listener<JSONObject>() {
                         @Override
-                        public void onResponse(Object response) {
+                        public void onResponse(JSONObject response) {
                             Log.d(ClientControl.class.getName(), "Login Works");
+                            try {
+                                Utils.saveUser(activity, response.getInt("id"),
+                                        response.getString("name"),
+                                        response.getBoolean("type"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             Intent intent = new Intent(Constants.LOGIN_SUCCESS);
                             activity.sendBroadcast(intent);
                         }
@@ -99,7 +104,7 @@ public class ClientControl {
                             activity.sendBroadcast(intent);
                         }
                     });
-                    MainApplication.getInstance(activity).addToRequestQueue(gsonRequest);
+                    MainApplication.getInstance(activity).addToRequestQueue(jsonRequest);
                 }
             }).start();
         } else {

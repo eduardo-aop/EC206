@@ -10,24 +10,27 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.utils.Utils;
 import com.example.eduar.brexpress.view.product.ProductListFragment;
+import com.example.eduar.brexpress.view.user.LoginActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends ActivityWithLoading {
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private View mHeaderView;
     private LinearLayout mHeaderLayout;
     private TextView mUserNameTextView;
-    private ImageView mUserImageview;
+    private TextView mTextView;
+    private TextView mFirstLetterTextView;
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar mToolbar;
+
+    private boolean mIsAdmin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, productListFragment)
                 .commit();
+
+        checkItem(R.id.product);
     }
 
     private void addNavigationDrawer() {
@@ -72,16 +77,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 checkItem(item.getItemId());
-                switch (item.getItemId()) {
-                    case R.id.product:
-                        break;
-                    case R.id.employee:
-                        break;
-                    case R.id.client:
-                        break;
-                    case R.id.shipping:
-                        break;
+
+                if (mIsAdmin) {
+                    adminItemMenuClicked(item);
+                } else {
+                    clientItemMenuClicked(item);
                 }
+
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 return true;
             }
@@ -90,7 +92,8 @@ public class MainActivity extends AppCompatActivity {
         mHeaderView = mNavigationView.getHeaderView(0);
         mHeaderLayout = mHeaderView.findViewById(R.id.nav_header);
         mUserNameTextView = mHeaderView.findViewById(R.id.name_nav_header);
-        mUserImageview = mHeaderView.findViewById(R.id.nav_header_imageView);
+        mTextView = mHeaderView.findViewById(R.id.nav_header_textView);
+        mFirstLetterTextView = mHeaderView.findViewById(R.id.first_letter_text);
 
         mHeaderLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                     //Has user logged
                     Intent i = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(i);
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
                 } else {
                     //No user logged
                 }
@@ -106,14 +110,57 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void adminItemMenuClicked(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.product:
+                break;
+            case R.id.employee:
+                break;
+            case R.id.user:
+                break;
+            case R.id.shipping:
+                break;
+            case R.id.logout:
+                Utils.clearUserData(MainActivity.this);
+                styleNavigationDrawerHeader();
+                checkItem(-1);
+                break;
+        }
+    }
+
+    private void clientItemMenuClicked(MenuItem item) {
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
+        mIsAdmin = Utils.getUserType(this);
+        styleNavigationDrawerMenu();
+        styleNavigationDrawerHeader();
+    }
+
+    private void styleNavigationDrawerMenu() {
+        mNavigationView.getMenu().clear();
+        if (mIsAdmin) {
+            mNavigationView.inflateMenu(R.menu.admin_main_drawer);
+        } else {
+            mNavigationView.inflateMenu(R.menu.user_main_drawer);
+        }
+    }
+
+    private void styleNavigationDrawerHeader() {
         String userName = Utils.getUserName(this);
 
         if (userName != null) {
             mUserNameTextView.setText(userName);
+            mTextView.setText(getResources().getString(R.string.see_profile));
+            mFirstLetterTextView.setText(String.valueOf(userName.charAt(0)));
+        } else {
+            mUserNameTextView.setText(getResources().getString(R.string.do_login));
+            mTextView.setText(getResources().getString(R.string.join_us));
+            mFirstLetterTextView.setText(getResources().getString(R.string.br));
         }
     }
 

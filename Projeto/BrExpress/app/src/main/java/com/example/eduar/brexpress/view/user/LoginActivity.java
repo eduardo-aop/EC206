@@ -1,14 +1,11 @@
-package com.example.eduar.brexpress.view;
+package com.example.eduar.brexpress.view.user;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatButton;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,10 +13,8 @@ import android.widget.Toast;
 
 import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.control.ClientControl;
-import com.example.eduar.brexpress.control.ProductControl;
-import com.example.eduar.brexpress.model.Product;
 import com.example.eduar.brexpress.utils.Constants;
-import com.example.eduar.brexpress.view.product.RegisterProductActivity;
+import com.example.eduar.brexpress.view.ActivityWithLoading;
 
 import java.util.regex.Pattern;
 
@@ -125,6 +120,7 @@ public class LoginActivity extends ActivityWithLoading {
                     switch (intent.getAction()) {
                         case Constants.LOGIN_SUCCESS:
                             LoginActivity.this.stopLoading();
+                            LoginActivity.this.finish();
                             break;
                         case Constants.LOGIN_ERROR:
                             Toast.makeText(LoginActivity.this,

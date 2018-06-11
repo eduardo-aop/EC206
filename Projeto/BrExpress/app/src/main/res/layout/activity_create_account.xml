@@ -15,6 +15,7 @@
         android:gravity="center_horizontal"/>
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/title">
@@ -32,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="@string/name"
-                android:inputType="textEmailAddress" />
+                android:maxLines="1"/>
 
             <EditText
                 android:id="@+id/email"
@@ -40,6 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="@string/email"
+                android:maxLines="1"
                 android:inputType="textEmailAddress" />
 
             <EditText
@@ -48,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="@string/address"
-                android:inputType="textEmailAddress" />
+                android:maxLines="1"/>
 
             <EditText
                 android:id="@+id/cpf"
@@ -56,21 +58,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="@string/cpf"
-                android:inputType="textEmailAddress" />
+                android:maxLength="11"
+                android:maxLines="1"
+                android:inputType="number" />
 
             <EditText
                 android:id="@+id/pwd"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:hint="@string/password" />
+                android:maxLines="1"
+                android:hint="@string/password"
+                android:inputType="textPassword"/>
 
             <EditText
                 android:id="@+id/confirm_pwd"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:hint="@string/confirm_password" />
+                android:maxLines="1"
+                android:hint="@string/confirm_password"
+                android:inputType="textPassword" />
 
             <Button
                 android:id="@+id/create_account"

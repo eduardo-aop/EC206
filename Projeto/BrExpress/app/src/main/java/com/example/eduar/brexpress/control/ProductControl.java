@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
@@ -176,6 +177,44 @@ public class ProductControl {
                         }
                     });
                     MainApplication.getInstance(activity).addToRequestQueue(gsonRequest);
+                }
+            }).start();
+        } else {
+            Toast.makeText(activity, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            activity.stopLoading();
+        }
+    }
+
+    public void deleteProducts(final ActivityWithLoading activity, final List<Integer> ids) {
+        if (Utils.isNetworkAvailable(activity)) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String url = Constants.SERVER_URL + "deleteProducts";
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("ids", ids);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    String json = new Gson().toJson(ids);
+
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, jsonObject, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d(ProductControl.class.getName(), "Delete ALL Works");
+                            Intent intent = new Intent(Constants.PRODUCT_DELETED_SUCCESS);
+                            activity.sendBroadcast(intent);
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(ProductControl.class.getName(), "Delete ALL does not Work");
+                            Intent intent = new Intent(Constants.PRODUCT_DELETED_ERROR);
+                            activity.sendBroadcast(intent);
+                        }
+                    });
+                    MainApplication.getInstance(activity).addToRequestQueue(jsonObjectRequest);
                 }
             }).start();
         } else {

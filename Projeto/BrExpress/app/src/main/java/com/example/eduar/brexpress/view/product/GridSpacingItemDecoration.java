@@ -1,4 +1,4 @@
-package com.example.eduar.brexpress.view;
+package com.example.eduar.brexpress.view.product;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

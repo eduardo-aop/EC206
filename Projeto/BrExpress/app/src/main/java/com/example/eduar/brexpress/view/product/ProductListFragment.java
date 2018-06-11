@@ -1,6 +1,9 @@
 package com.example.eduar.brexpress.view.product;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,9 +24,10 @@ import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.control.ProductControl;
 import com.example.eduar.brexpress.model.Product;
 import com.example.eduar.brexpress.service.ImageDownloader;
+import com.example.eduar.brexpress.utils.Constants;
 import com.example.eduar.brexpress.utils.Utils;
+import com.example.eduar.brexpress.view.ActivityWithLoading;
 import com.example.eduar.brexpress.view.FragmentWithLoading;
-import com.example.eduar.brexpress.view.GridSpacingItemDecoration;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -41,6 +45,7 @@ public class ProductListFragment extends FragmentWithLoading {
     private List<Product> mProductList;
     private FloatingActionButton mFab;
     private boolean isAdmin = false;
+    private BroadcastReceiver mReceiver;
 
     @Nullable
     @Override
@@ -71,6 +76,9 @@ public class ProductListFragment extends FragmentWithLoading {
     @Override
     public void onResume() {
         super.onResume();
+
+        broadcastReceiver();
+        registerBroadcasts();
 
         isAdmin = Utils.getUserType(this.getContext());
         setHasOptionsMenu(isAdmin);
@@ -104,7 +112,7 @@ public class ProductListFragment extends FragmentWithLoading {
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_delete_product:
-                Utils.createDialog(this.getContext(), R.string.confirm_delete_product);
+                Utils.createDialog(this.getContext(), R.string.remove, R.string.confirm_delete_product);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -162,5 +170,47 @@ public class ProductListFragment extends FragmentWithLoading {
                 break;
             }
         }
+    }
+
+    private void broadcastReceiver() {
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                if (intent != null && intent.getAction() != null) {
+                    switch (intent.getAction()) {
+                        case Constants.CONFIRMED_ACTION:
+                            showLoading(null);
+                            ProductControl.getInstance().deleteProducts((ActivityWithLoading) getActivity(), mAdapter.getSelectedProducts());
+                            break;
+                        case Constants.PRODUCT_DELETED_SUCCESS:
+                            Toast.makeText(getActivity(), R.string.products_removed_success, Toast.LENGTH_LONG).show();
+                            loadProducts();
+                            mAdapter.setSelectedProducts(new ArrayList<Integer>());
+                            getActivity().invalidateOptionsMenu();
+                            break;
+                        case Constants.PRODUCT_DELETED_ERROR:
+                            stopLoading();
+                            Toast.makeText(getActivity(), R.string.products_removed_error, Toast.LENGTH_LONG).show();
+                            break;
+                    }
+                }
+            }
+        };
+    }
+    /**
+     * Registering all broadcast from this class
+     */
+    private void registerBroadcasts() {
+        getActivity().registerReceiver(mReceiver, new IntentFilter(Constants.CONFIRMED_ACTION));
+        getActivity().registerReceiver(mReceiver, new IntentFilter(Constants.PRODUCT_DELETED_SUCCESS));
+        getActivity().registerReceiver(mReceiver, new IntentFilter(Constants.PRODUCT_DELETED_ERROR));
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(mReceiver);
     }
 }

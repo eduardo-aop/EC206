@@ -115,8 +115,12 @@ public class RegisterProductActivity extends ActivityWithLoading {
             case R.id.action_save:
                 if (validateField()) {
                     RegisterProductActivity.this.startLoading(null);
-                    Utils.convertImageToBase64(this,
-                            ((BitmapDrawable)mProductImageImageView.getDrawable()).getBitmap());
+                    if (mSelectedPicture) {
+                        Utils.convertImageToBase64(this,
+                                ((BitmapDrawable) mProductImageImageView.getDrawable()).getBitmap());
+                    } else {
+                        sendData(null);
+                    }
                 }
                 return true;
             case android.R.id.home:
@@ -227,10 +231,6 @@ public class RegisterProductActivity extends ActivityWithLoading {
             mProductDiscountEditText.setError(getResources().getString(R.string.max_product_discount_available));
             return false;
         }
-        if (!mSelectedPicture) {
-            Toast.makeText(this, R.string.selected_a_picture, Toast.LENGTH_LONG).show();
-            return false;
-        }
         return true;
     }
 
@@ -328,9 +328,9 @@ public class RegisterProductActivity extends ActivityWithLoading {
 
         mProductNameEditText.setText(product.getName());
         mProductDescriptionEditText.setText(product.getDescription());
-        mProductDiscountEditText.setText(String.valueOf(product.getDiscount()));
+        mProductDiscountEditText.setText(String.valueOf(product.getDiscount() > 0 ? product.getQtd() : ""));
         mProductQtdEditText.setText(String.valueOf(product.getQtd()));
-        mProductPriceEditText.setText(String.valueOf(product.getPrice()));
+        mProductPriceEditText.setText(String.format("%.2f", product.getPrice()));
 
         new ImageDownloader().execute(product.getId(), this, "productImage");
     }
@@ -346,7 +346,11 @@ public class RegisterProductActivity extends ActivityWithLoading {
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                mProductImageImageView.setImageBitmap(mEditingProduct.getImage());
+                if (mEditingProduct.getImage() == null) {
+                    mProductImageImageView.setImageDrawable(getResources().getDrawable(R.drawable.no_image_available));
+                } else {
+                    mProductImageImageView.setImageBitmap(mEditingProduct.getImage());
+                }
             }
         };
         mainHandler.post(myRunnable);
@@ -371,38 +375,7 @@ public class RegisterProductActivity extends ActivityWithLoading {
                             RegisterProductActivity.this.stopLoading();
                             break;
                         case Constants.CONVERT_IMAGE_TO_BASE64_RECEIVER:
-                            Product product;
-
-                            if (mIsEditing) {
-                                product = mEditingProduct;
-                            } else {
-                                product = new Product();
-                            }
-
-                            product.setName(mProductNameEditText.getText().toString());
-
-                            String discountText = mProductDiscountEditText.getText().toString().trim();
-                            if (discountText.isEmpty() || discountText.equals("")) {
-                                discountText = "0";
-                            }
-                            product.setDiscount(Float.valueOf(discountText));
-
-                            product.setDescription(mProductDescriptionEditText.getText().toString());
-                            product.setImageBase64(intent.getExtras().getString(Constants.BASE64_IMAGE));
-
-                            String price = mProductPriceEditText.getText().toString();
-                            String cleanPriceString = price.replaceAll("[R$]", "");
-                            cleanPriceString = cleanPriceString.replaceAll("[.]", "");
-                            cleanPriceString = cleanPriceString.replaceAll(",", ".");
-
-                            product.setPrice(Float.valueOf(cleanPriceString));
-                            product.setQtd(Integer.valueOf(mProductQtdEditText.getText().toString().trim()));
-
-                            if (mIsEditing) {
-                                ProductControl.getInstance().updateProduct(RegisterProductActivity.this, product);
-                            } else {
-                                ProductControl.getInstance().saveProduct(RegisterProductActivity.this, product);
-                            }
+                            sendData(intent);
                             break;
                         case Constants.PRODUCT_UPDATED_SUCCESSFULLY:
                             Toast.makeText(RegisterProductActivity.this,
@@ -424,6 +397,43 @@ public class RegisterProductActivity extends ActivityWithLoading {
         };
     }
 
+    private void sendData(Intent intent) {
+        Product product;
+
+        if (mIsEditing) {
+            product = mEditingProduct;
+        } else {
+            product = new Product();
+        }
+
+        product.setName(mProductNameEditText.getText().toString());
+
+        String discountText = mProductDiscountEditText.getText().toString().trim();
+        if (discountText.isEmpty() || discountText.equals("")) {
+            discountText = "0";
+        }
+        product.setDiscount(Float.valueOf(discountText));
+
+        product.setDescription(mProductDescriptionEditText.getText().toString());
+
+        if (intent != null) {
+            product.setImageBase64(intent.getExtras().getString(Constants.BASE64_IMAGE));
+        }
+
+        String price = mProductPriceEditText.getText().toString();
+        String cleanPriceString = price.replaceAll("[R$]", "");
+        cleanPriceString = cleanPriceString.replaceAll("[.]", "");
+        cleanPriceString = cleanPriceString.replaceAll(",", ".");
+
+        product.setPrice(Float.valueOf(cleanPriceString));
+        product.setQtd(Integer.valueOf(mProductQtdEditText.getText().toString().trim()));
+
+        if (mIsEditing) {
+            ProductControl.getInstance().updateProduct(RegisterProductActivity.this, product);
+        } else {
+            ProductControl.getInstance().saveProduct(RegisterProductActivity.this, product);
+        }
+    }
     /**
      * Registering all broadcast from this class
      */

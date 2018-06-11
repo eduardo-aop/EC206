@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by eduar on 06/06/2018.
  */
 
-public class Client {
+public class User {
     @SerializedName("id")
     private int mId;
 
@@ -23,7 +23,7 @@ public class Client {
     @SerializedName("cpf")
     private String mCpf;
 
-    @SerializedName("pdw")
+    @SerializedName("pwd")
     private String mPwd;
 
     public int getId() {

@@ -1,4 +1,4 @@
-package com.example.eduar.brexpress.view.product;
+package com.example.eduar.brexpress.view.worker;
 
 import android.content.Intent;
 import android.graphics.Paint;
@@ -15,6 +15,9 @@ import android.widget.TextView;
 import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.model.Product;
 import com.example.eduar.brexpress.utils.Utils;
+import com.example.eduar.brexpress.view.product.ProductDetailActivity;
+import com.example.eduar.brexpress.view.product.ProductListFragment;
+import com.example.eduar.brexpress.view.product.RegisterProductActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +26,7 @@ import java.util.List;
  * Created by eduar on 03/04/2018.
  */
 
-public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ViewHolder> {
+public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.ViewHolder> {
 
     private ProductListFragment mFragment;
     private List<Product> mProducts;
@@ -31,7 +34,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     private boolean isEditing = false;
     private boolean isAdmin;
 
-    public ProductListAdapter(ProductListFragment fragment, List<Product> products) {
+    public WorkerListAdapter(ProductListFragment fragment, List<Product> products) {
         this.mFragment = fragment;
         this.mProducts = products;
         this.mSelectedProducts = new ArrayList<>();
@@ -151,25 +154,13 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         this.notifyDataSetChanged();
     }
 
-    public List<Integer> getSelectedProducts() {
-        return this.mSelectedProducts;
-    }
-
-    public void setSelectedProducts(List<Integer> list) {
-        if (mSelectedProducts.isEmpty()) {
-            this.isEditing = false;
-        }
-        this.mSelectedProducts = list;
-        this.notifyDataSetChanged();
-    }
-
     public void notifySpecificItemChanged(final int pos) {
         Handler mainHandler = new Handler(mFragment.getActivity().getMainLooper());
 
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                ProductListAdapter.this.notifyItemChanged(pos);
+                WorkerListAdapter.this.notifyItemChanged(pos);
             }
         };
         mainHandler.post(myRunnable);
