@@ -7,6 +7,9 @@
     <string name="cpf">Cpf</string>
     <string name="password">Senha</string>
     <string name="confirm_password">Confirmar Senha</string>
+    <string name="salario">Salário</string>
+    <string name="setor">Setor</string>
+    <string name="funcao">Função</string>
     <string name="old_password">Senha Antiga</string>
     <string name="login">Login</string>
     <string name="create_new_acc">Criar uma nova conta</string>
