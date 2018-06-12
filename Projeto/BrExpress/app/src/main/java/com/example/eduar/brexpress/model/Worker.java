@@ -16,4 +16,28 @@ public class Worker extends User {
 
     @SerializedName("function")
     private String mFunction;
+
+    public Float getSalary() {
+        return mSalary;
+    }
+
+    public void setSalary(Float mSalary) {
+        this.mSalary = mSalary;
+    }
+
+    public String getSector() {
+        return mSector;
+    }
+
+    public void setSector(String mSector) {
+        this.mSector = mSector;
+    }
+
+    public String getFunction() {
+        return mFunction;
+    }
+
+    public void setFunction(String mFunction) {
+        this.mFunction = mFunction;
+    }
 }

@@ -1,6 +1,9 @@
 package com.example.eduar.brexpress.view.product;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,9 +19,12 @@ import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.control.ProductControl;
 import com.example.eduar.brexpress.model.Product;
 import com.example.eduar.brexpress.service.ImageDownloader;
+import com.example.eduar.brexpress.utils.Constants;
+import com.example.eduar.brexpress.utils.Utils;
 import com.example.eduar.brexpress.view.ActivityWithLoading;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 
 /**
  * Created by eduar on 04/05/2018.
@@ -34,6 +40,7 @@ public class ProductDetailActivity extends ActivityWithLoading {
     private TextView mQtd;
     private TextView mDescription;
     private Button mBuyButton;
+    private BroadcastReceiver mReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +60,14 @@ public class ProductDetailActivity extends ActivityWithLoading {
 
         this.startLoading(null);
         ProductControl.getInstance().getProductById(this, id);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        broadcastReceiver();
+        registerBroadcasts();
     }
 
     @Override
@@ -82,8 +97,10 @@ public class ProductDetailActivity extends ActivityWithLoading {
         mBuyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ProductDetailActivity.this, CreditCardActivity.class);
-                startActivity(i);
+                startLoading(null);
+                ProductControl.getInstance().buyProduct(ProductDetailActivity.this,
+                        Utils.getUserId(ProductDetailActivity.this),
+                        mProduct.getId());
 
 //                final int GET_NEW_CARD = 2;
 //
@@ -122,8 +139,39 @@ public class ProductDetailActivity extends ActivityWithLoading {
         mainHandler.post(myRunnable);
     }
 
+    private void broadcastReceiver() {
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                if (intent != null && intent.getAction() != null) {
+                    switch (intent.getAction()) {
+                        case Constants.PRODUCT_BOUGHT_SUCCESS:
+                            stopLoading();
+                            Toast.makeText(ProductDetailActivity.this, R.string.products_bought_success, Toast.LENGTH_LONG).show();
+
+                            break;
+                        case Constants.PRODUCT_BOUGHT_ERROR:
+                            stopLoading();
+                            Toast.makeText(ProductDetailActivity.this, R.string.products_bought_error, Toast.LENGTH_LONG).show();
+
+                            break;
+                    }
+                }
+            }
+        };
+    }
+    /**
+     * Registering all broadcast from this class
+     */
+    private void registerBroadcasts() {
+        registerReceiver(mReceiver, new IntentFilter(Constants.PRODUCT_BOUGHT_SUCCESS));
+        registerReceiver(mReceiver, new IntentFilter(Constants.PRODUCT_BOUGHT_ERROR));
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(mReceiver);
     }
 }

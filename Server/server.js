@@ -131,14 +131,100 @@ app.get('/getProduct', function(req, res) {
 	});
 });
 
+app.get('/getClients', function(req, res) {
+    console.log(req.body);
+
+	var id = 0;
+	var sql = 'SELECT * FROM client WHERE worker_id IS NULL ORDER BY name';
+	con.query(sql, function (err, result, fields) {
+		if (err) throw err;
+		
+	    console.log(result);
+		res.send(result);
+	});
+});
+
+app.get('/getWorkers', function(req, res) {
+    console.log(req.body);
+
+	var id = 0;
+	var sql = 'SELECT * FROM client JOIN worker ON client.worker_id = worker.id WHERE worker_id IS NOT NULL ORDER BY name';
+	con.query(sql, function (err, result, fields) {
+		if (err) throw err;
+		
+	    console.log(result);
+		res.send(result);
+	});
+});
+
+app.post('/buyProduct', function(req, res) {
+    console.log(req.body);
+
+	var clientId = req.body.clientId;
+	var productId = req.body.productId;
+	var creditCard = req.body.creditCard;
+	var currentDate = new Date();
+	var arrivalDate = new Date();
+	var randomDateFromNow = Math.random() * 15;
+	arrivalDate.setDate(arrivalDate.getDate() + randomDateFromNow);
+	
+	var randomShipping = 'SELECT id FROM shipping ORDER BY rand() limit 10';
+	con.query(randomShipping, function (err, sResult, fields) {
+		if (err) throw err;
+	
+		console.log(sResult[0].id);
+	    var sql = 'INSERT INTO client_has_product (client_id, product_id, product_status, arrival_date, purchase_date, shipping_id) VALUES (?,?,?,?,?,?)';
+		con.query(sql, [clientId, productId, 0, arrivalDate.getTime(), currentDate.getTime(), sResult[0].id], function (err, result, fields) {
+		if (err) throw err;
+		
+			var sql = 'UPDATE product SET qtd = qtd -1 WHERE id = ?';
+			con.query(sql, [productId], function (err, result, fields) {
+				if (err) throw err;
+		
+				console.log(result);
+				res.send(result);
+			});
+		});
+	});
+});
+
+app.get('/getOrders', function(req, res) {
+    console.log(req.body);
+
+	var id = req.query.id;
+	var sql = 'SELECT product.name, client_has_product.product_id, client_has_product.product_status, client_has_product.arrival_date, client_has_product.purchase_date FROM product JOIN client_has_product ON product.id = client_has_product.product_id WHERE client_has_product.client_id = ? ORDER BY client_has_product.purchase_date';
+	
+	console.log(sql);
+	con.query(sql, [id], function (err, result, fields) {
+		if (err) throw err;
+		
+	    console.log(result);
+		res.send(result);
+	});
+});
+
 app.get('/productImage', function(req, res){
 	var file = "./images/products/" + req.query.id + ".png";
 	res.download(file); // Set disposition and send it.
 });
 
-var server = app.listen(8000, '192.168.0.12', function () {
+function purchaseStatusChange() {
+	setInterval(function() {
+		console.log("called");
+		var sql = 'UPDATE client_has_product SET product_status = product_status +1 WHERE product_status < 3';
+		con.query(sql, function (err, result, fields) {
+			if (err) throw err;
+	
+			console.log(result);
+		});
+	}, 1000*60);
+}
+
+var server = app.listen(8000, '192.168.0.10', function () {
 	var host = server.address().address
 	var port = server.address().port
 
 	console.log("Example app listening at http://%s:%s", host, port)
+	
+	purchaseStatusChange();
 });

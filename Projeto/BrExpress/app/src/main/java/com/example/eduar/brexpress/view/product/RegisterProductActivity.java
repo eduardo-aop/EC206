@@ -328,7 +328,7 @@ public class RegisterProductActivity extends ActivityWithLoading {
 
         mProductNameEditText.setText(product.getName());
         mProductDescriptionEditText.setText(product.getDescription());
-        mProductDiscountEditText.setText(String.valueOf(product.getDiscount() > 0 ? product.getQtd() : ""));
+        mProductDiscountEditText.setText(String.valueOf(product.getDiscount() > 0 ? product.getDiscount() : ""));
         mProductQtdEditText.setText(String.valueOf(product.getQtd()));
         mProductPriceEditText.setText(String.format("%.2f", product.getPrice()));
 

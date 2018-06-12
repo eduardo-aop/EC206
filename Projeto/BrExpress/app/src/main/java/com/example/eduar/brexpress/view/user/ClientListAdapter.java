@@ -1,4 +1,4 @@
-package com.example.eduar.brexpress.view.worker;
+package com.example.eduar.brexpress.view.user;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.eduar.brexpress.R;
-import com.example.eduar.brexpress.model.Worker;
+import com.example.eduar.brexpress.model.User;
 import com.example.eduar.brexpress.utils.Utils;
 
 import java.util.ArrayList;
@@ -18,23 +18,23 @@ import java.util.List;
  * Created by eduar on 03/04/2018.
  */
 
-public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.ViewHolder> {
+public class ClientListAdapter extends RecyclerView.Adapter<ClientListAdapter.ViewHolder> {
 
-    private WorkerListFragment mFragment;
-    private List<Worker> mWorkers;
-    private List<Integer> mSelectedWorkers;
+    private ClientListFragment mFragment;
+    private List<User> mUsers;
+    private List<Integer> mSelectedUsers;
     private boolean isAdmin;
 
-    public WorkerListAdapter(WorkerListFragment fragment, List<Worker> workers) {
+    public ClientListAdapter(ClientListFragment fragment, List<User> users) {
         this.mFragment = fragment;
-        this.mWorkers = workers;
-        this.mSelectedWorkers = new ArrayList<>();
+        this.mUsers = users;
+        this.mSelectedUsers = new ArrayList<>();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_worker, parent, false);
+                .inflate(R.layout.card_user, parent, false);
 
         isAdmin = Utils.getUserType(mFragment.getContext());
         ViewHolder vh = new ViewHolder(v);
@@ -43,14 +43,14 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Vi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Worker p = mWorkers.get(position);
+        final User p = mUsers.get(position);
 
         holder.mNameTextView.setText(p.getName());
-        holder.mFunctionTextView.setText(p.getFunction());
-        holder.mSectorTextView.setText(p.getSector());
+        holder.mEmailTextView.setText(p.getEmail());
+        holder.mCpfTextView.setText(p.getCpf());
         holder.mFirstLetterTextView.setText(String.valueOf(p.getName().charAt(0)).toUpperCase());
 
-        containerStyle(holder, mSelectedWorkers.contains(p.getId()));
+        containerStyle(holder, mSelectedUsers.contains(p.getId()));
     }
 
     private void containerStyle(ViewHolder holder, boolean selected) {
@@ -65,30 +65,30 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Vi
         }
     }
 
-    public void notifyDataChanged(List<Worker> users) {
-        mWorkers = users;
+    public void notifyDataChanged(List<User> users) {
+        mUsers = users;
         this.notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return mWorkers.size();
+        return mUsers.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         private TextView mNameTextView;
-        private TextView mFunctionTextView;
-        private TextView mSectorTextView;
+        private TextView mEmailTextView;
+        private TextView mCpfTextView;
         private TextView mFirstLetterTextView;
         private LinearLayout mContainer;
 
         private ViewHolder(View card) {
             super(card);
             mContainer = card.findViewById(R.id.container);
-            mNameTextView = card.findViewById(R.id.worker_name_text);
-            mFunctionTextView = card.findViewById(R.id.worker_function_text);
-            mSectorTextView = card.findViewById(R.id.worker_sector_text);
+            mNameTextView = card.findViewById(R.id.user_name_text);
+            mEmailTextView = card.findViewById(R.id.user_email_text);
+            mCpfTextView = card.findViewById(R.id.user_cpf_text);
             mFirstLetterTextView = card.findViewById(R.id.first_letter_text);
         }
     }

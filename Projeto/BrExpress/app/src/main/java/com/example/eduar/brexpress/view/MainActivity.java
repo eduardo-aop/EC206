@@ -5,7 +5,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -15,8 +14,11 @@ import android.widget.TextView;
 
 import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.utils.Utils;
+import com.example.eduar.brexpress.view.product.OrderListFragment;
 import com.example.eduar.brexpress.view.product.ProductListFragment;
+import com.example.eduar.brexpress.view.user.ClientListFragment;
 import com.example.eduar.brexpress.view.user.LoginActivity;
+import com.example.eduar.brexpress.view.worker.WorkerListFragment;
 
 public class MainActivity extends ActivityWithLoading {
 
@@ -42,12 +44,7 @@ public class MainActivity extends ActivityWithLoading {
 
         addNavigationDrawer();
 
-        ProductListFragment productListFragment = new ProductListFragment();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, productListFragment)
-                .commit();
-
-        checkItem(R.id.product);
+        replaceFragment(new ProductListFragment());
     }
 
     private void addNavigationDrawer() {
@@ -76,7 +73,8 @@ public class MainActivity extends ActivityWithLoading {
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
-                checkItem(item.getItemId());
+                if (item.getItemId() != R.id.logout)
+                    checkItem(item.getItemId());
 
                 if (mIsAdmin) {
                     adminItemMenuClicked(item);
@@ -113,23 +111,52 @@ public class MainActivity extends ActivityWithLoading {
     private void adminItemMenuClicked(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.product:
+                replaceFragment(new ProductListFragment());
                 break;
             case R.id.employee:
+                replaceFragment(new WorkerListFragment());
                 break;
             case R.id.user:
+                replaceFragment(new ClientListFragment());
                 break;
             case R.id.shipping:
                 break;
             case R.id.logout:
                 Utils.clearUserData(MainActivity.this);
                 styleNavigationDrawerHeader();
-                checkItem(-1);
+                reloadActivity();
                 break;
         }
     }
 
     private void clientItemMenuClicked(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.home:
+                replaceFragment(new ProductListFragment());
+                break;
+            case R.id.my_account:
+                break;
+            case R.id.my_orders:
+                replaceFragment(new OrderListFragment());
+                break;
+            case R.id.support:
+                break;
+            case R.id.logout:
+                Utils.clearUserData(MainActivity.this);
+                styleNavigationDrawerHeader();
+                reloadActivity();
+                break;
+        }
+    }
 
+    private void reloadActivity() {
+        finish();
+        startActivity(getIntent());
+    }
+
+    private void replaceFragment(FragmentWithLoading fragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment)
+                .commit();
     }
 
     @Override

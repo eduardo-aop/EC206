@@ -45,6 +45,8 @@
     <string name="client_updated_error">Falha ao atualizar perfil. Tente Novamente!</string>
     <string name="no_internet_connection">Sem conexão com a internet.</string>
     <string name="failed_to_load_products">Falha ao carregar produtos</string>
+    <string name="failed_to_load_users">Falha ao carregar clientes</string>
+    <string name="failed_to_load_orders">Falha ao carregar pedidos</string>
     <string name="price">R$ %1$.2f</string>
     <string name="valor">Valor</string>
     <string name="discount_image">%1$.0f%% Off</string>
@@ -69,6 +71,8 @@
     <string name="products_removed_success">Produtos removidos com sucesso!</string>
     <string name="products_removed_error">Falha ao remover produtos. Tente novamente!</string>
 
+    <string name="products_bought_success">Parabéns. Acompanhe a entrega do pedido pelo histórico de compras!</string>
+    <string name="products_bought_error">Falha ao comprar o produto. Tente novamente!</string>
     <string name="buy">Comprar</string>
 
     <string name="card_name">Nome</string>
@@ -77,5 +81,10 @@
     <string name="card_date_expires">Data</string>
     <string name="pay">Pagar</string>
 
-
+    <string name="waiting_payment">Aguardando pagamento</string>
+    <string name="payment_accept">Pagamento aceito</string>
+    <string name="shipping_status">A caminho</string>
+    <string name="delivered">Entregue</string>
+    <string name="arrival_date">Data prevista da chegada: %1$s</string>
+    <string name="purchase_date">Data do pedido: %1$s</string>
 </resources>

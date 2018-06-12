@@ -44,7 +44,7 @@ public class ProductListFragment extends FragmentWithLoading {
     private ProductListAdapter mAdapter;
     private List<Product> mProductList;
     private FloatingActionButton mFab;
-    private boolean isAdmin = false;
+    private boolean mIsAdmin = false;
     private BroadcastReceiver mReceiver;
 
     @Nullable
@@ -80,10 +80,10 @@ public class ProductListFragment extends FragmentWithLoading {
         broadcastReceiver();
         registerBroadcasts();
 
-        isAdmin = Utils.getUserType(this.getContext());
-        setHasOptionsMenu(isAdmin);
+        mIsAdmin = Utils.getUserType(this.getContext());
+        setHasOptionsMenu(mIsAdmin);
 
-        if (isAdmin) {
+        if (mIsAdmin) {
             mFab.setVisibility(View.VISIBLE);
         } else {
             mFab.setVisibility(View.GONE);

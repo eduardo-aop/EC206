@@ -7,16 +7,27 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.eduar.brexpress.R;
+import com.example.eduar.brexpress.model.Product;
 import com.example.eduar.brexpress.model.User;
 import com.example.eduar.brexpress.service.GsonRequest;
 import com.example.eduar.brexpress.utils.Constants;
 import com.example.eduar.brexpress.utils.Utils;
 import com.example.eduar.brexpress.view.ActivityWithLoading;
+import com.example.eduar.brexpress.view.FragmentWithLoading;
+import com.example.eduar.brexpress.view.product.ProductListFragment;
+import com.example.eduar.brexpress.view.user.ClientListFragment;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * Created by eduar on 06/06/2018.
@@ -110,6 +121,44 @@ public class ClientControl {
         } else {
             Toast.makeText(activity, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             activity.stopLoading();
+        }
+    }
+
+    public void getAllClients(final FragmentWithLoading fragment) {
+        if (Utils.isNetworkAvailable(fragment.getContext())) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String url = Constants.SERVER_URL + "getClients";
+                    JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            Log.d(ClientControl.class.getName(), "Get ALL Works");
+                            Gson gson = new Gson();
+                            Type listType = new TypeToken<List<User>>(){}.getType();
+                            List<User> userList = gson.fromJson(response.toString(), listType);
+                            if (fragment instanceof ClientListFragment) {
+                                ((ClientListFragment) fragment).allClientsLoaded(userList);
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(ClientControl.class.getName(), "Get ALL does not Work");
+                            if (fragment instanceof ClientListFragment) {
+                                ((ClientListFragment) fragment).allClientsLoadedError();
+                            }
+                        }
+                    });
+
+                    MainApplication.getInstance(fragment.getContext()).addToRequestQueue(jsonArrayRequest);
+                }
+            }).start();
+        } else {
+            Toast.makeText(fragment.getContext(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            if (fragment.getActivity() instanceof ActivityWithLoading) {
+                ((ActivityWithLoading) fragment.getActivity()).stopLoading();
+            }
         }
     }
 }

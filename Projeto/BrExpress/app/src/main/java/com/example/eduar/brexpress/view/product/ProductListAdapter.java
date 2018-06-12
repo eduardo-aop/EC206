@@ -156,23 +156,27 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     }
 
     public void setSelectedProducts(List<Integer> list) {
+        this.mSelectedProducts = list;
         if (mSelectedProducts.isEmpty()) {
             this.isEditing = false;
         }
-        this.mSelectedProducts = list;
         this.notifyDataSetChanged();
     }
 
     public void notifySpecificItemChanged(final int pos) {
-        Handler mainHandler = new Handler(mFragment.getActivity().getMainLooper());
+        try {
+            Handler mainHandler = new Handler(mFragment.getActivity().getMainLooper());
 
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                ProductListAdapter.this.notifyItemChanged(pos);
-            }
-        };
-        mainHandler.post(myRunnable);
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    ProductListAdapter.this.notifyItemChanged(pos);
+                }
+            };
+            mainHandler.post(myRunnable);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

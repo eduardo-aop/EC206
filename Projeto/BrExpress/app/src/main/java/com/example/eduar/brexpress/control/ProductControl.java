@@ -185,6 +185,44 @@ public class ProductControl {
         }
     }
 
+    public void buyProduct(final ActivityWithLoading activity, final int clientId, final int productId) {
+        if (Utils.isNetworkAvailable(activity)) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String url = Constants.SERVER_URL + "buyProduct";
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("clientId", clientId);
+                        jsonObject.put("productId", productId);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, jsonObject, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d(ProductControl.class.getName(), "Buy product Works");
+                            Intent intent = new Intent(Constants.PRODUCT_BOUGHT_SUCCESS);
+                            activity.sendBroadcast(intent);
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(ProductControl.class.getName(), "Buy product does not Work");
+                            Intent intent = new Intent(Constants.PRODUCT_BOUGHT_ERROR);
+                            activity.sendBroadcast(intent);
+                        }
+                    });
+                    MainApplication.getInstance(activity).addToRequestQueue(jsonObjectRequest);
+                }
+            }).start();
+        } else {
+            Toast.makeText(activity, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            activity.stopLoading();
+        }
+    }
+
     public void deleteProducts(final ActivityWithLoading activity, final List<Integer> ids) {
         if (Utils.isNetworkAvailable(activity)) {
             new Thread(new Runnable() {

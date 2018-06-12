@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 
 import com.example.eduar.brexpress.utils.Constants;
 import com.example.eduar.brexpress.view.FragmentWithLoading;
+import com.example.eduar.brexpress.view.product.OrderListAdapter;
+import com.example.eduar.brexpress.view.product.OrderListFragment;
 import com.example.eduar.brexpress.view.product.ProductDetailActivity;
 import com.example.eduar.brexpress.view.product.ProductListFragment;
 import com.example.eduar.brexpress.view.product.RegisterProductActivity;
@@ -40,6 +42,8 @@ public class ImageDownloader extends AsyncTask<Object, Void, Void> {
             ((ProductDetailActivity) params[1]).imageDownloaded(inputStream, imageDownloadingId);
         } else if (params[1] instanceof RegisterProductActivity) {
             ((RegisterProductActivity) params[1]).imageDownloaded(inputStream, imageDownloadingId);
+        } else if (params[1] instanceof OrderListFragment) {
+            ((OrderListFragment) params[1]).imageDownloaded(inputStream, imageDownloadingId);
         }
         return null;
     }

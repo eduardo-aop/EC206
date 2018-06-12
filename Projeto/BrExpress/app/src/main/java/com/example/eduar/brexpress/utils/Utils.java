@@ -21,6 +21,9 @@ import com.example.eduar.brexpress.R;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by eduar on 04/05/2018.
@@ -88,6 +91,34 @@ public class Utils {
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public static String getStatusText(Context context, int status) {
+        switch (status) {
+            //Waiting Payment
+            case 0:
+                return context.getResources().getString(R.string.waiting_payment);
+            //Payment Accepted
+            case 1:
+                return context.getResources().getString(R.string.payment_accept);
+            //Shipping Status
+            case 2:
+                return context.getResources().getString(R.string.shipping_status);
+            //Delivered
+            case 3:
+                return context.getResources().getString(R.string.delivered);
+            default:
+                return null;
+        }
+    }
+
+    public static String setFormatDate(long date) {
+        Calendar purchaseDate = Calendar.getInstance();
+        purchaseDate.setTimeInMillis(date);
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        System.out.println(format.format(purchaseDate.getTime()));
+
+        return format.format(purchaseDate.getTime());
     }
 
     public static void createDialog(final Context context, int title, int message) {
