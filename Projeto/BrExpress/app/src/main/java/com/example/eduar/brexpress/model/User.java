@@ -26,6 +26,9 @@ public class User {
     @SerializedName("pwd")
     private String mPwd;
 
+    @SerializedName("old_pwd")
+    private String mOldPwd;
+
     public int getId() {
         return mId;
     }
@@ -72,6 +75,14 @@ public class User {
 
     public void setPwd(String mPwd) {
         this.mPwd = mPwd;
+    }
+
+    public String getOldPwd() {
+        return mOldPwd;
+    }
+
+    public void setOldPwd(String mOldPwd) {
+        this.mOldPwd = mOldPwd;
     }
 
     public String converToJson() {

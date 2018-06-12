@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:paddingBottom="20dp">
+
+        <LinearLayout
+            android:id="@+id/login_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/name"
+                style="@style/LoginEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/name"
+                android:maxLines="1"/>
+
+            <EditText
+                android:id="@+id/email"
+                style="@style/LoginEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/email"
+                android:maxLines="1"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:id="@+id/address"
+                style="@style/LoginEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/address"
+                android:maxLines="1"/>
+
+            <EditText
+                android:id="@+id/cpf"
+                style="@style/LoginEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/cpf"
+                android:maxLength="11"
+                android:maxLines="1"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/old_pwd"
+                style="@style/LoginEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:maxLines="1"
+                android:hint="@string/old_password"
+                android:inputType="textPassword"/>
+
+            <EditText
+                android:id="@+id/pwd"
+                style="@style/LoginEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:maxLines="1"
+                android:hint="@string/password"
+                android:inputType="textPassword"/>
+
+            <EditText
+                android:id="@+id/confirm_pwd"
+                style="@style/LoginEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:maxLines="1"
+                android:hint="@string/confirm_password"
+                android:inputType="textPassword" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

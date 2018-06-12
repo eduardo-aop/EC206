@@ -30,11 +30,38 @@ app.post('/saveClient', function(req, res) {
 
 	var id = 0;
 	var sql = 'INSERT INTO client (name, email, address, cpf, pwd) VALUES (?,?,?,?,?)';
-	console.log(req.body.price);
 	con.query(sql, [req.body.name, req.body.email, req.body.address, req.body.cpf, req.body.pwd], function (err, result, fields) {
 		if (err) throw err;
 		res.end();
 	});
+});
+
+app.post('/updatedClient', function(req, res) {
+    console.log(req.body);
+
+	var id = 0;
+	var pwd = req.body.pwd
+	if (pwd != null) {
+		var checkUserSql = 'SELECT id FROM client WHERE email = ? AND pwd = ?';
+		
+		con.query(checkUserSql, [req.body.name, req.body.address, req.body.cpf, req.body.pwd, id], function (err, result, fields) {
+			if (err) throw err;
+			
+			var sql = 'UPDATE client SET name = ?, address = ?, cpf = ?, pwd = ? WHERE id = ?';
+			console.log(req.body.price);
+			con.query(sql, [req.body.name, req.body.address, req.body.cpf, req.body.pwd, id], function (err, result, fields) {
+				if (err) throw err;
+				res.end();
+			});
+		});
+	} else {
+		var sql = 'UPDATE client SET name = ?, address = ?, cpf = ? WHERE id = ?';
+		console.log(req.body.price);
+		con.query(sql, [req.body.name, req.body.address, req.body.cpf, id], function (err, result, fields) {
+			if (err) throw err;
+			res.end();
+		});
+	}
 });
 
 app.post('/doLogin', function(req, res) {
@@ -144,6 +171,19 @@ app.get('/getClients', function(req, res) {
 	});
 });
 
+app.get('/getClients', function(req, res) {
+    console.log(req.body);
+
+	var id = req.query.id;
+	var sql = 'SELECT * FROM client WHERE id = ?';
+	con.query(sql, [id], function (err, result, fields) {
+		if (err) throw err;
+		
+	    console.log(result);
+		res.send(result);
+	});
+});
+
 app.get('/getWorkers', function(req, res) {
     console.log(req.body);
 
@@ -165,7 +205,7 @@ app.post('/buyProduct', function(req, res) {
 	var creditCard = req.body.creditCard;
 	var currentDate = new Date();
 	var arrivalDate = new Date();
-	var randomDateFromNow = Math.random() * 15;
+	var randomDateFromNow = Math.random() * 15 + 5;
 	arrivalDate.setDate(arrivalDate.getDate() + randomDateFromNow);
 	
 	var randomShipping = 'SELECT id FROM shipping ORDER BY rand() limit 10';
@@ -220,7 +260,7 @@ function purchaseStatusChange() {
 	}, 1000*60);
 }
 
-var server = app.listen(8000, '192.168.0.10', function () {
+var server = app.listen(8000, '192.168.0.11', function () {
 	var host = server.address().address
 	var port = server.address().port
 

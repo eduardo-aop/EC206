@@ -19,6 +19,7 @@ import com.example.eduar.brexpress.view.ActivityWithLoading;
 import com.example.eduar.brexpress.view.FragmentWithLoading;
 import com.example.eduar.brexpress.view.product.ProductListFragment;
 import com.example.eduar.brexpress.view.user.ClientListFragment;
+import com.example.eduar.brexpress.view.user.EditAccountFragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -75,6 +76,37 @@ public class ClientControl {
         } else {
             Toast.makeText(activity, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             activity.stopLoading();
+        }
+    }
+
+    public void updateClient(final FragmentWithLoading fragment, final User user) {
+        if (Utils.isNetworkAvailable(fragment.getContext())) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String url = Constants.SERVER_URL + "saveClient";
+                    GsonRequest gsonRequest = new GsonRequest(Request.Method.PUT, url, User.class, null,
+                            user.converToJson(), new Response.Listener() {
+                        @Override
+                        public void onResponse(Object response) {
+                            Log.d(ClientControl.class.getName(), "Update Works");
+                            Intent intent = new Intent(Constants.CLIENT_UPDATED_SUCCESSFULLY);
+                            fragment.getActivity().sendBroadcast(intent);
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(ClientControl.class.getName(), "Update does not Work");
+                            Intent intent = new Intent(Constants.CLIENT_UPDATED_ERROR);
+                            fragment.getActivity().sendBroadcast(intent);
+                        }
+                    });
+                    MainApplication.getInstance(fragment.getContext()).addToRequestQueue(gsonRequest);
+                }
+            }).start();
+        } else {
+            Toast.makeText(fragment.getContext(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            ((ActivityWithLoading) fragment.getActivity()).stopLoading();
         }
     }
 
@@ -152,6 +184,43 @@ public class ClientControl {
                     });
 
                     MainApplication.getInstance(fragment.getContext()).addToRequestQueue(jsonArrayRequest);
+                }
+            }).start();
+        } else {
+            Toast.makeText(fragment.getContext(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            if (fragment.getActivity() instanceof ActivityWithLoading) {
+                ((ActivityWithLoading) fragment.getActivity()).stopLoading();
+            }
+        }
+    }
+
+    public void getClientById(final FragmentWithLoading fragment, final int id) {
+        if (Utils.isNetworkAvailable(fragment.getContext())) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String url = Constants.SERVER_URL + "getClientById?id=" + id;
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d(ProductControl.class.getName(), "Get By Id Works");
+                            Gson gson = new Gson();
+                            User user = gson.fromJson(response.toString(), User.class);
+                            if (fragment instanceof EditAccountFragment) {
+                                ((EditAccountFragment) fragment).userLoaded(user);
+                            }
+                        }
+                    },  new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(ClientControl.class.getName(), "Get ALL does not Work");
+                            if (fragment instanceof EditAccountFragment) {
+                                ((EditAccountFragment) fragment).userLoadedError();
+                            }
+                        }
+                    });
+
+                    MainApplication.getInstance(fragment.getContext()).addToRequestQueue(jsonObjectRequest);
                 }
             }).start();
         } else {

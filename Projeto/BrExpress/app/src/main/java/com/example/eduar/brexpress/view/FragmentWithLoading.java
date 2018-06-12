@@ -23,25 +23,11 @@ public class FragmentWithLoading extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    public void showLoading(String text) {
-        stopLoading();
-
-        View view = LayoutInflater.from(this.getActivity()).inflate(R.layout.progress_dialog, null);
-        TextView message = view.findViewById(R.id.message);
-        message.setText(text);
-
-        mProgress = new ProgressDialog(this.getActivity());
-        mProgress.setMessage(null);
-        mProgress.setCancelable(false);
-        mProgress.show();
-        mProgress.setContentView(view);
+    public void startLoading(String text) {
+        ((ActivityWithLoading) this.getActivity()).startLoading(text);
     }
 
     public void stopLoading() {
-        if (mProgress != null) {
-            mProgress.dismiss();
-        }
-
-        mProgress = null;
+        ((ActivityWithLoading) this.getActivity()).stopLoading();
     }
 }

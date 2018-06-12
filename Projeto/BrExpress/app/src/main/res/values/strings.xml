@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">BrExpress</string>
 
-
     <string name="name">Nome</string>
     <string name="email">E-mail</string>
     <string name="address">Endereço</string>
     <string name="cpf">Cpf</string>
     <string name="password">Senha</string>
     <string name="confirm_password">Confirmar Senha</string>
+    <string name="old_password">Senha Antiga</string>
     <string name="login">Login</string>
     <string name="create_new_acc">Criar uma nova conta</string>
     <string name="register">Cadastrar</string>
@@ -83,8 +83,8 @@
 
     <string name="waiting_payment">Aguardando pagamento</string>
     <string name="payment_accept">Pagamento aceito</string>
-    <string name="shipping_status">A caminho</string>
-    <string name="delivered">Entregue</string>
+    <string name="shipping_status">A caminho do endereço</string>
+    <string name="delivered">Entregue ao destinatário</string>
     <string name="arrival_date">Data prevista da chegada: %1$s</string>
     <string name="purchase_date">Data do pedido: %1$s</string>
 </resources>

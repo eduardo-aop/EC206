@@ -16,7 +16,9 @@ import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.utils.Utils;
 import com.example.eduar.brexpress.view.product.OrderListFragment;
 import com.example.eduar.brexpress.view.product.ProductListFragment;
+import com.example.eduar.brexpress.view.support.SupportFragment;
 import com.example.eduar.brexpress.view.user.ClientListFragment;
+import com.example.eduar.brexpress.view.user.EditAccountFragment;
 import com.example.eduar.brexpress.view.user.LoginActivity;
 import com.example.eduar.brexpress.view.worker.WorkerListFragment;
 
@@ -33,6 +35,7 @@ public class MainActivity extends ActivityWithLoading {
     private Toolbar mToolbar;
 
     private boolean mIsAdmin = false;
+    private int mLastSelectedItem = R.id.product;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,11 +138,13 @@ public class MainActivity extends ActivityWithLoading {
                 replaceFragment(new ProductListFragment());
                 break;
             case R.id.my_account:
+                replaceFragment(new EditAccountFragment());
                 break;
             case R.id.my_orders:
                 replaceFragment(new OrderListFragment());
                 break;
             case R.id.support:
+                replaceFragment(new SupportFragment());
                 break;
             case R.id.logout:
                 Utils.clearUserData(MainActivity.this);
@@ -166,6 +171,8 @@ public class MainActivity extends ActivityWithLoading {
         mIsAdmin = Utils.getUserType(this);
         styleNavigationDrawerMenu();
         styleNavigationDrawerHeader();
+
+        checkItem(mLastSelectedItem);
     }
 
     private void styleNavigationDrawerMenu() {
@@ -182,17 +189,19 @@ public class MainActivity extends ActivityWithLoading {
 
         if (userName != null) {
             mUserNameTextView.setText(userName);
+            mTextView.setVisibility(View.VISIBLE);
             mTextView.setText(getResources().getString(R.string.see_profile));
-            mFirstLetterTextView.setText(String.valueOf(userName.charAt(0)));
+            mFirstLetterTextView.setText(String.valueOf(userName.charAt(0)).toUpperCase());
         } else {
             mUserNameTextView.setText(getResources().getString(R.string.do_login));
-            mTextView.setText(getResources().getString(R.string.join_us));
+            mTextView.setVisibility(View.GONE);
             mFirstLetterTextView.setText(getResources().getString(R.string.br));
         }
     }
 
     public void checkItem(int id) {
         int size = mNavigationView.getMenu().size();
+        mLastSelectedItem = id;
 
         for (int i = 0; i < size; i++) {
             MenuItem item = mNavigationView.getMenu().getItem(i);

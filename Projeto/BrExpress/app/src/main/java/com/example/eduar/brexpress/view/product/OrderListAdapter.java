@@ -48,9 +48,8 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 
         holder.mPurchaseDateTextView.setText(String.format(mFragment.getResources().getString(R.string.purchase_date),
                 Utils.setFormatDate(order.getPurchaseDate())));
-        holder.mArrivalDateTextView.setText(String.format(mFragment.getResources().getString(R.string.purchase_date),
+        holder.mArrivalDateTextView.setText(String.format(mFragment.getResources().getString(R.string.arrival_date),
                 Utils.setFormatDate(order.getArrivalDate())));
-
 
         holder.mImageView.setImageBitmap(null);
         if (order.getImage() != null) {

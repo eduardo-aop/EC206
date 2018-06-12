@@ -1,4 +1,4 @@
-package com.example.eduar.brexpress.view.worker;
+package com.example.eduar.brexpress.view.shipping;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.eduar.brexpress.R;
-import com.example.eduar.brexpress.control.WorkerControl;
-import com.example.eduar.brexpress.model.Worker;
+import com.example.eduar.brexpress.control.ClientControl;
+import com.example.eduar.brexpress.model.User;
 import com.example.eduar.brexpress.utils.Utils;
 import com.example.eduar.brexpress.view.FragmentWithLoading;
 import com.example.eduar.brexpress.view.product.RegisterProductActivity;
@@ -27,12 +27,12 @@ import java.util.List;
  * Created by eduar on 04/06/2018.
  */
 
-public class WorkerListFragment extends FragmentWithLoading {
+public class ShippingListFragment extends FragmentWithLoading {
 
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefresh;
-    private WorkerListAdapter mAdapter;
-    private List<Worker> mWorkerList;
+    private ShippingListAdapter mAdapter;
+    private List<User> mUserList;
     private FloatingActionButton mFab;
 
     private boolean mIsAdmin = false;
@@ -40,8 +40,8 @@ public class WorkerListFragment extends FragmentWithLoading {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_worker_list, container, false);
-        mWorkerList = new ArrayList<>();
+        View v = inflater.inflate(R.layout.fragment_client_list, container, false);
+        mUserList = new ArrayList<>();
 
         mRecyclerView = v.findViewById(R.id.recycler_view);
         mSwipeRefresh = v.findViewById(R.id.swipe_refresh);
@@ -49,7 +49,7 @@ public class WorkerListFragment extends FragmentWithLoading {
 
         addListeners();
 
-        mAdapter = new WorkerListAdapter(this, mWorkerList);
+        mAdapter = new ShippingListAdapter(this, mUserList);
 
         LinearLayoutManager llm = new LinearLayoutManager(this.getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -74,7 +74,7 @@ public class WorkerListFragment extends FragmentWithLoading {
         } else {
             mFab.setVisibility(View.GONE);
         }
-        loadWorkers();
+        loadClients();
         this.startLoading(null);
     }
 
@@ -83,7 +83,7 @@ public class WorkerListFragment extends FragmentWithLoading {
             @Override
             public void onRefresh() {
                 mRecyclerView.setEnabled(false);
-                loadWorkers();
+                loadClients();
             }
         });
 
@@ -96,16 +96,16 @@ public class WorkerListFragment extends FragmentWithLoading {
         });
     }
 
-    private void loadWorkers() {
-        WorkerControl.getInstance().getAllWorkers(this);
+    private void loadClients() {
+        ClientControl.getInstance().getAllClients(this);
     }
 
-    public void allClientsLoaded(List<Worker> workers) {
+    public void allClientsLoaded(List<User> users) {
         mSwipeRefresh.setRefreshing(false);
         mRecyclerView.setEnabled(true);
         this.stopLoading();
-        mWorkerList = workers;
-        mAdapter.notifyDataChanged(mWorkerList);
+        mUserList = users;
+        mAdapter.notifyDataChanged(mUserList);
     }
 
     public void allClientsLoadedError() {
