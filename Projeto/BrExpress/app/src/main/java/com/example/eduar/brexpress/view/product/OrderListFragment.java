@@ -1,11 +1,9 @@
 package com.example.eduar.brexpress.view.product;
 
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +14,6 @@ import android.widget.Toast;
 
 import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.control.OrderControl;
-import com.example.eduar.brexpress.control.WorkerControl;
 import com.example.eduar.brexpress.model.Order;
 import com.example.eduar.brexpress.service.ImageDownloader;
 import com.example.eduar.brexpress.utils.Utils;
@@ -36,19 +33,15 @@ public class OrderListFragment extends FragmentWithLoading {
     private SwipeRefreshLayout mSwipeRefresh;
     private OrderListAdapter mAdapter;
     private List<Order> mOrderList;
-    private FloatingActionButton mFab;
-
-    private boolean mIsAdmin = false;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_client_list, container, false);
+        View v = inflater.inflate(R.layout.fragment_order_list, container, false);
         mOrderList = new ArrayList<>();
 
         mRecyclerView = v.findViewById(R.id.recycler_view);
         mSwipeRefresh = v.findViewById(R.id.swipe_refresh);
-        mFab = v.findViewById(R.id.fab);
 
         addListeners();
 
@@ -67,18 +60,8 @@ public class OrderListFragment extends FragmentWithLoading {
     public void onResume() {
         super.onResume();
 
-//        broadcastReceiver();
-//        registerBroadcasts();
-
-        mIsAdmin = Utils.getUserType(this.getContext());
-
-        if (mIsAdmin) {
-            mFab.setVisibility(View.VISIBLE);
-        } else {
-            mFab.setVisibility(View.GONE);
-        }
         loadOrders();
-        this.showLoading(null);
+        this.startLoading(null);
     }
 
     private void addListeners() {
@@ -87,14 +70,6 @@ public class OrderListFragment extends FragmentWithLoading {
             public void onRefresh() {
                 mRecyclerView.setEnabled(false);
                 loadOrders();
-            }
-        });
-
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), RegisterProductActivity.class);
-                getActivity().startActivity(i);
             }
         });
     }
