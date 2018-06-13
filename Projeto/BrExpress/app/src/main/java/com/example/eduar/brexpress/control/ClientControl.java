@@ -84,7 +84,7 @@ public class ClientControl {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String url = Constants.SERVER_URL + "saveClient";
+                    String url = Constants.SERVER_URL + "updateClient";
                     GsonRequest gsonRequest = new GsonRequest(Request.Method.PUT, url, User.class, null,
                             user.converToJson(), new Response.Listener() {
                         @Override
@@ -106,7 +106,7 @@ public class ClientControl {
             }).start();
         } else {
             Toast.makeText(fragment.getContext(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-            ((ActivityWithLoading) fragment.getActivity()).stopLoading();
+            fragment.stopLoading();
         }
     }
 
@@ -189,7 +189,7 @@ public class ClientControl {
         } else {
             Toast.makeText(fragment.getContext(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             if (fragment.getActivity() instanceof ActivityWithLoading) {
-                ((ActivityWithLoading) fragment.getActivity()).stopLoading();
+                fragment.stopLoading();
             }
         }
     }
@@ -226,7 +226,7 @@ public class ClientControl {
         } else {
             Toast.makeText(fragment.getContext(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             if (fragment.getActivity() instanceof ActivityWithLoading) {
-                ((ActivityWithLoading) fragment.getActivity()).stopLoading();
+                fragment.stopLoading();
             }
         }
     }

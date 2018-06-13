@@ -25,6 +25,9 @@ var con = mysql.createConnection({
 });
 con.connect();
 
+/**
+* CLIENT
+*/
 app.post('/saveClient', function(req, res) {
     console.log(req.body);
 
@@ -36,23 +39,27 @@ app.post('/saveClient', function(req, res) {
 	});
 });
 
-app.post('/updatedClient', function(req, res) {
+app.put('/updateClient', function(req, res) {
     console.log(req.body);
 
-	var id = 0;
-	var pwd = req.body.pwd
+	var pwd = req.body.old_pwd
+	console.log(pwd);
 	if (pwd != null) {
 		var checkUserSql = 'SELECT id FROM client WHERE email = ? AND pwd = ?';
 		
-		con.query(checkUserSql, [req.body.name, req.body.address, req.body.cpf, req.body.pwd, id], function (err, result, fields) {
+		con.query(checkUserSql, [req.body.email, req.body.old_pwd], function (err, result, fields) {
 			if (err) throw err;
 			
-			var sql = 'UPDATE client SET name = ?, address = ?, cpf = ?, pwd = ? WHERE id = ?';
-			console.log(req.body.price);
-			con.query(sql, [req.body.name, req.body.address, req.body.cpf, req.body.pwd, id], function (err, result, fields) {
-				if (err) throw err;
-				res.end();
-			});
+			console.log(result);
+			if (result.length > 0) {
+				var sql = 'UPDATE client SET name = ?, address = ?, cpf = ?, pwd = ? WHERE id = ?';
+				con.query(sql, [req.body.name, req.body.address, req.body.cpf, req.body.pwd, result[0].id], function (err, result, fields) {
+					if (err) throw err;
+					res.end();
+				});
+			}else {
+				res.send(404);
+			}
 		});
 	} else {
 		var sql = 'UPDATE client SET name = ?, address = ?, cpf = ? WHERE id = ?';
@@ -64,6 +71,106 @@ app.post('/updatedClient', function(req, res) {
 	}
 });
 
+app.get('/getClients', function(req, res) {
+    console.log(req.body);
+
+	var id = 0;
+	var sql = 'SELECT * FROM client WHERE worker_id IS NULL ORDER BY name';
+	con.query(sql, function (err, result, fields) {
+		if (err) throw err;
+		
+	    console.log(result);
+		res.send(result);
+	});
+});
+
+app.get('/getClientById', function(req, res) {
+    console.log(req.body);
+
+	var id = req.query.id;
+	var sql = 'SELECT * FROM client WHERE id = ?';
+	con.query(sql, [id], function (err, result, fields) {
+		if (err) throw err;
+		
+	    console.log(result[0]);
+		res.send(result[0]);
+	});
+});
+
+/**
+* WORKER
+*/
+app.post('/saveWorker', function(req, res) {
+    console.log(req.body);
+
+	var id = 0;
+	var sql = 'INSERT INTO worker (salary, function, sector) VALUES (?,?,?)';
+	con.query(sql, [req.body.salary, req.body.function, req.body.sector], function (err, result, fields) {
+		if (err) throw err;
+		console.log(result);
+		var sqlClient = 'INSERT INTO client (name, email, address, cpf, worker_id, type) VALUES (?,?,?,?,?,?)';
+		con.query(sqlClient, [req.body.name, req.body.email, req.body.address, req.body.cpf, result.insertId, 1], function (err, result, fields) {
+			if (err) throw err;
+			res.end();
+		});
+	});
+});
+
+app.put('/updateWorker', function(req, res) {
+    console.log(req.body);
+
+	var id = req.body.worker_id
+	console.log('id: '+ id);
+	var sql = 'UPDATE client JOIN worker ON worker.id = client.worker_id SET client.name = ?, client.address = ?, client.cpf = ?, worker.salary = ?, worker.sector = ?, worker.function = ? WHERE worker.id = ?';
+	con.query(sql, [req.body.name, req.body.address, req.body.cpf, req.body.salary, req.body.sector, req.body.function, id], function (err, result, fields) {
+		if (err) throw err;
+		res.end();
+	});
+});
+
+app.get('/getWorkers', function(req, res) {
+    console.log(req.body);
+
+	var id = req.query.id;
+	var sql = 'SELECT * FROM client JOIN worker ON client.worker_id = worker.id WHERE worker_id IS NOT NULL AND client.id != ? ORDER BY name';
+	con.query(sql, [id], function (err, result, fields) {
+		if (err) throw err;
+		
+	    console.log(result);
+		res.send(result);
+	});
+});
+
+app.get('/getWorkerById', function(req, res) {
+    console.log(req.query.id);
+
+	var id = req.query.id;
+	var sql = 'SELECT * FROM worker JOIN client ON worker.id = client.worker_id WHERE client.worker_id = ?';
+	con.query(sql, [id], function (err, result, fields) {
+		if (err) throw err;
+		
+	    console.log(result[0]);
+		res.send(result[0]);
+	});
+});
+
+app.post('/deleteWorkers', function(req, res) {
+    console.log(req.body);
+
+	var ids = JSON.parse(req.body.ids);
+	console.log(ids);
+	var sql = 'DELETE FROM client WHERE id IN (?)';
+	con.query(sql, [ids], function (err, result, fields) {
+		if (err) throw err;
+	
+	    console.log(result);
+		res.send(result);
+	});
+});
+
+/**
+* LOGIN
+*/
 app.post('/doLogin', function(req, res) {
     console.log(req.body);
 
@@ -76,7 +183,7 @@ app.post('/doLogin', function(req, res) {
 		
 		var resp = result[0];
 		if (result.length > 0) {
-			resp['type'] = resp['worker_id'] != null
+			resp['type'] = resp['type'] == 0
 			console.log(resp)
 			res.send(resp);
 		} else {
@@ -85,6 +192,9 @@ app.post('/doLogin', function(req, res) {
 	});
 });
 
+/**
+* PRODUCT
+*/
 app.post('/saveProduct', function(req, res) {
     console.log(req.body);
 
@@ -145,7 +255,7 @@ app.get('/getProducts', function(req, res) {
 	});
 });
 
-app.get('/getProduct', function(req, res) {
+app.get('/getProductById', function(req, res) {
     console.log(req.body);
 
 	var id = req.query.id;
@@ -155,45 +265,6 @@ app.get('/getProduct', function(req, res) {
 		
 	    console.log(result);
 		res.send(result[0]);
-	});
-});
-
-app.get('/getClients', function(req, res) {
-    console.log(req.body);
-
-	var id = 0;
-	var sql = 'SELECT * FROM client WHERE worker_id IS NULL ORDER BY name';
-	con.query(sql, function (err, result, fields) {
-		if (err) throw err;
-		
-	    console.log(result);
-		res.send(result);
-	});
-});
-
-app.get('/getClients', function(req, res) {
-    console.log(req.body);
-
-	var id = req.query.id;
-	var sql = 'SELECT * FROM client WHERE id = ?';
-	con.query(sql, [id], function (err, result, fields) {
-		if (err) throw err;
-		
-	    console.log(result);
-		res.send(result);
-	});
-});
-
-app.get('/getWorkers', function(req, res) {
-    console.log(req.body);
-
-	var id = 0;
-	var sql = 'SELECT * FROM client JOIN worker ON client.worker_id = worker.id WHERE worker_id IS NOT NULL ORDER BY name';
-	con.query(sql, function (err, result, fields) {
-		if (err) throw err;
-		
-	    console.log(result);
-		res.send(result);
 	});
 });
 
@@ -228,6 +299,14 @@ app.post('/buyProduct', function(req, res) {
 	});
 });
 
+app.get('/productImage', function(req, res){
+	var file = "./images/products/" + req.query.id + ".png";
+	res.download(file); // Set disposition and send it.
+});
+
+/**
+* ORDER
+*/
 app.get('/getOrders', function(req, res) {
     console.log(req.body);
 
@@ -241,11 +320,6 @@ app.get('/getOrders', function(req, res) {
 	    console.log(result);
 		res.send(result);
 	});
-});
-
-app.get('/productImage', function(req, res){
-	var file = "./images/products/" + req.query.id + ".png";
-	res.download(file); // Set disposition and send it.
 });
 
 function purchaseStatusChange() {

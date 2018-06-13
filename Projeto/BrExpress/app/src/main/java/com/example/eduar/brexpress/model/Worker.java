@@ -8,6 +8,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Worker extends User {
 
+    @SerializedName("worker_id")
+    private int mWorkerId;
+
     @SerializedName("salary")
     private Float mSalary;
 
@@ -16,6 +19,14 @@ public class Worker extends User {
 
     @SerializedName("function")
     private String mFunction;
+
+    public int getWorkerId() {
+        return mWorkerId;
+    }
+
+    public void setWorkerId(int mWorkerId) {
+        this.mWorkerId = mWorkerId;
+    }
 
     public Float getSalary() {
         return mSalary;

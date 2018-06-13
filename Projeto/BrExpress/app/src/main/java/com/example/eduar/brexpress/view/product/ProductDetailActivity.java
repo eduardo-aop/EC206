@@ -50,7 +50,7 @@ public class ProductDetailActivity extends ActivityWithLoading {
         initAllComponents();
 
         Bundle b = getIntent().getExtras();
-        int id = b.getInt("productId");
+        int id = b.getInt(Constants.PRODUCT_ID);
 
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.my_toolbar);
 

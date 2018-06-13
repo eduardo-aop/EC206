@@ -78,7 +78,7 @@ public class OrderControl {
             }).start();
         } else {
             Toast.makeText(fragment.getContext(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-            ((ActivityWithLoading)fragment.getActivity()).stopLoading();
+            fragment.stopLoading();
         }
     }
 }

@@ -9,6 +9,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -48,6 +51,7 @@ public class WorkerListFragment extends FragmentWithLoading {
         mFab = v.findViewById(R.id.fab);
 
         addListeners();
+        setHasOptionsMenu(true);
 
         mAdapter = new WorkerListAdapter(this, mWorkerList);
 
@@ -64,9 +68,6 @@ public class WorkerListFragment extends FragmentWithLoading {
     public void onResume() {
         super.onResume();
 
-//        broadcastReceiver();
-//        registerBroadcasts();
-
         mIsAdmin = Utils.getUserType(this.getContext());
 
         if (mIsAdmin) {
@@ -76,6 +77,31 @@ public class WorkerListFragment extends FragmentWithLoading {
         }
         loadWorkers();
         this.startLoading(null);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        if (mAdapter.isEditing()) {
+            this.getActivity().getMenuInflater().inflate(R.menu.menu_delete, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        switch (id) {
+            case R.id.action_delete:
+                Utils.createDialog(this.getContext(), R.string.remove, R.string.confirm_delete_workers);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void addListeners() {
@@ -90,7 +116,7 @@ public class WorkerListFragment extends FragmentWithLoading {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getActivity(), RegisterProductActivity.class);
+                Intent i = new Intent(getActivity(), RegisterWorkerActivity.class);
                 getActivity().startActivity(i);
             }
         });

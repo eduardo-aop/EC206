@@ -54,7 +54,7 @@ public class EditAccountFragment extends FragmentWithLoading {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_client_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_edit_account, container, false);
 
         mUserId = Utils.getUserId(this.getContext());
 
@@ -64,6 +64,7 @@ public class EditAccountFragment extends FragmentWithLoading {
 
         loadUser();
 
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -99,6 +100,7 @@ public class EditAccountFragment extends FragmentWithLoading {
     }
 
     public void userLoaded(User user) {
+        this.stopLoading();
         mNameEditText.setText(user.getName());
         mEmailEditText.setText(user.getEmail());
         mAddressEditText.setText(user.getAddress());
@@ -106,7 +108,8 @@ public class EditAccountFragment extends FragmentWithLoading {
     }
 
     public void userLoadedError() {
-
+        this.stopLoading();
+        Toast.makeText(getContext(), R.string.failed_to_load_user, Toast.LENGTH_LONG).show();
     }
 
     private void setMockObject() {
@@ -120,13 +123,13 @@ public class EditAccountFragment extends FragmentWithLoading {
 
     private void initAllComponents(View v) {
         mScrollView = v.findViewById(R.id.scroll_view);
-        mNameEditText = v.findViewById(R.id.name);
-        mEmailEditText = v.findViewById(R.id.email);
-        mAddressEditText = v.findViewById(R.id.address);
-        mCpfEditText = v.findViewById(R.id.cpf);
-        mPwdEditText = v.findViewById(R.id.pwd);
-        mConfirmPwdEditText = v.findViewById(R.id.confirm_pwd);
-        mOldPwdEditText = v.findViewById(R.id.old_pwd);
+        mNameEditText = v.findViewById(R.id.name_text);
+        mEmailEditText = v.findViewById(R.id.email_text);
+        mAddressEditText = v.findViewById(R.id.address_text);
+        mCpfEditText = v.findViewById(R.id.cpf_text);
+        mPwdEditText = v.findViewById(R.id.pwd_text);
+        mConfirmPwdEditText = v.findViewById(R.id.confirm_pwd_text);
+        mOldPwdEditText = v.findViewById(R.id.old_pwd_text);
     }
 
     /**
@@ -174,7 +177,7 @@ public class EditAccountFragment extends FragmentWithLoading {
             return false;
         }
 
-        String oldPwd = mPwdEditText.getText().toString().trim();
+        String oldPwd = mOldPwdEditText.getText().toString().trim();
         String pwd = mPwdEditText.getText().toString().trim();
         String confirmPwd = mConfirmPwdEditText.getText().toString().trim();
 

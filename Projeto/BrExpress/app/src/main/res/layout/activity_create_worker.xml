@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_red_dark">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cadastro de Funcionário"
-        android:textColor="@android:color/white"
-        android:textSize="30dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"/>
+    <include android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
 
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/title">
+        android:paddingBottom="20dp">
 
 
         <LinearLayout
@@ -31,7 +24,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/name"
+                android:id="@+id/name_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -39,7 +32,7 @@
                 android:maxLines="1"/>
 
             <EditText
-                android:id="@+id/email"
+                android:id="@+id/email_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -48,42 +41,16 @@
                 android:inputType="textEmailAddress" />
 
             <EditText
-                android:id="@+id/address"
+                android:id="@+id/address_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="@string/address"
                 android:maxLines="1"/>
 
-            <EditText
-                android:id="@+id/salario"
-                style="@style/LoginEditText"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="@string/salario"
-                android:maxLines="1"
-                android:inputType="number"/>
 
             <EditText
-                android:id="@+id/setor"
-                style="@style/LoginEditText"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="@string/setor"
-                android:maxLines="1"
-                android:inputType="textAutoComplete"/>
-
-            <EditText
-                android:id="@+id/funcao"
-                style="@style/LoginEditText"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="@string/funcao"
-                android:maxLines="1"
-                android:inputType="textAutoCorrect"/>
-
-            <EditText
-                android:id="@+id/cpf"
+                android:id="@+id/cpf_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -93,43 +60,33 @@
                 android:inputType="number" />
 
             <EditText
-                android:id="@+id/pwd"
+                android:id="@+id/salary_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:hint="@string/salary"
                 android:maxLines="1"
-                android:hint="@string/password"
-                android:inputType="textPassword"/>
+                android:inputType="number"/>
 
             <EditText
-                android:id="@+id/confirm_pwd"
+                android:id="@+id/sector_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:hint="@string/sector"
                 android:maxLines="1"
-                android:hint="@string/confirm_password"
-                android:inputType="textPassword" />
+                android:inputType="textAutoComplete"/>
 
-            <Button
-                android:id="@+id/create_account"
-                style="@style/PrimaryButton"
+            <EditText
+                android:id="@+id/function_text"
+                style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="25dp"
-                android:background="@android:color/holo_green_light"
-                android:text="@string/register"
-                android:textColor="@android:color/white" />
+                android:hint="@string/function"
+                android:maxLines="1"
+                android:inputType="textAutoCorrect"/>
 
-            <Button
-                android:id="@+id/back_button"
-                style="@style/PrimaryButton"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="25dp"
-                android:text="@string/back"
-                android:textColor="@android:color/white"
-                android:layout_marginBottom="40dp"/>
 
         </LinearLayout>
     </ScrollView>
-</RelativeLayout>
+</LinearLayout>

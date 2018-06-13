@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.TypedValue;
+import android.widget.EditText;
 
 import com.example.eduar.brexpress.R;
 
@@ -112,6 +113,14 @@ public class Utils {
         }
     }
 
+    public static String clearPrice(EditText editText) {
+        String price = editText.getText().toString();
+        String cleanPriceString = price.replaceAll("[R$]", "");
+        cleanPriceString = cleanPriceString.replaceAll("[.]", "");
+        cleanPriceString = cleanPriceString.replaceAll(",", ".");
+
+        return cleanPriceString;
+    }
     public static String setFormatDate(long date) {
         Calendar purchaseDate = Calendar.getInstance();
         purchaseDate.setTimeInMillis(date);

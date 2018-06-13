@@ -7,9 +7,9 @@
     <string name="cpf">Cpf</string>
     <string name="password">Senha</string>
     <string name="confirm_password">Confirmar Senha</string>
-    <string name="salario">Salário</string>
-    <string name="setor">Setor</string>
-    <string name="funcao">Função</string>
+    <string name="salary">Salário</string>
+    <string name="sector">Setor</string>
+    <string name="function">Função</string>
     <string name="old_password">Senha Antiga</string>
     <string name="login">Login</string>
     <string name="create_new_acc">Criar uma nova conta</string>
@@ -45,11 +45,14 @@
     <string name="client_saved_success">Cadastrado realizado com sucesso!</string>
     <string name="client_saved_error">Falha ao cadastrar. Tente Novamente!</string>
     <string name="client_updated_success">Perfil atualizado com sucesso!</string>
-    <string name="client_updated_error">Falha ao atualizar perfil. Tente Novamente!</string>
+    <string name="client_updated_error">Falha ao atualizar perfil. Verifique sua senha antiga!</string>
     <string name="no_internet_connection">Sem conexão com a internet.</string>
+    <string name="failed_to_load_user">Falha ao carregar perfil</string>
     <string name="failed_to_load_products">Falha ao carregar produtos</string>
     <string name="failed_to_load_users">Falha ao carregar clientes</string>
     <string name="failed_to_load_orders">Falha ao carregar pedidos</string>
+    <string name="failed_to_load_worker">Falha ao carregar funcionário</string>
+    <string name="failed_to_load_workers">Falha ao carregar funcionários</string>
     <string name="price">R$ %1$.2f</string>
     <string name="valor">Valor</string>
     <string name="discount_image">%1$.0f%% Off</string>
@@ -68,8 +71,10 @@
     <string name="br">BR</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
-    <string name="confirm_delete_product">Realmente deseja remover estes produtos.
-        Esta Ação não pode ser desfeita.</string>
+    <string name="confirm_delete_product">Realmente deseja remover estes produtos?
+        Esta Ação não poderá ser desfeita.</string>
+    <string name="confirm_delete_workers">Realmente deseja remover estes funcionários?
+    Esta Ação não poderá ser desfeita.</string>
     <string name="remove">Remover</string>
     <string name="products_removed_success">Produtos removidos com sucesso!</string>
     <string name="products_removed_error">Falha ao remover produtos. Tente novamente!</string>

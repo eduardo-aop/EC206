@@ -1,5 +1,6 @@
 package com.example.eduar.brexpress.view.worker;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,10 @@ import android.widget.TextView;
 
 import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.model.Worker;
+import com.example.eduar.brexpress.utils.Constants;
 import com.example.eduar.brexpress.utils.Utils;
+import com.example.eduar.brexpress.view.product.ProductDetailActivity;
+import com.example.eduar.brexpress.view.product.RegisterProductActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +27,8 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Vi
     private WorkerListFragment mFragment;
     private List<Worker> mWorkers;
     private List<Integer> mSelectedWorkers;
-    private boolean isAdmin;
+    private boolean mIsAdmin;
+    private boolean mIsEditing;
 
     public WorkerListAdapter(WorkerListFragment fragment, List<Worker> workers) {
         this.mFragment = fragment;
@@ -36,7 +41,7 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Vi
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_worker, parent, false);
 
-        isAdmin = Utils.getUserType(mFragment.getContext());
+        mIsAdmin = Utils.getUserType(mFragment.getContext());
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
@@ -49,6 +54,30 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Vi
         holder.mFunctionTextView.setText(p.getFunction());
         holder.mSectorTextView.setText(p.getSector());
         holder.mFirstLetterTextView.setText(String.valueOf(p.getName().charAt(0)).toUpperCase());
+
+        holder.mContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mIsEditing) {
+                    containerStyle(holder, selectProduct(p.getId()));
+                } else {
+                    Intent i = new Intent(mFragment.getActivity(), RegisterWorkerActivity.class);
+                    i.putExtra(Constants.IS_EDITING, true);
+                    i.putExtra(Constants.WORKER_ID, p.getId());
+                    mFragment.getActivity().startActivity(i);
+                }
+            }
+        });
+
+        if (mIsAdmin) {
+            holder.mContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    containerStyle(holder, selectProduct(p.getId()));
+                    return true;
+                }
+            });
+        }
 
         containerStyle(holder, mSelectedWorkers.contains(p.getId()));
     }
@@ -63,6 +92,26 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Vi
                     .getColor(android.R.color.transparent));
             holder.mContainer.setAlpha(1.0f);
         }
+    }
+
+    private boolean selectProduct(Integer id) {
+        boolean selected;
+        if (mSelectedWorkers.contains(id)) {
+            mSelectedWorkers.remove(id);
+            selected = false;
+        } else {
+            mSelectedWorkers.add(id);
+            selected = true;
+        }
+
+        mIsEditing = !mSelectedWorkers.isEmpty();
+
+        mFragment.getActivity().invalidateOptionsMenu();
+        return selected;
+    }
+
+    public boolean isEditing() {
+        return mIsEditing;
     }
 
     public void notifyDataChanged(List<Worker> users) {

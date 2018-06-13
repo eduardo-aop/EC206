@@ -79,7 +79,7 @@ public class ProductControl {
         } else {
             Toast.makeText(fragment.getContext(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             if (fragment.getActivity() instanceof ActivityWithLoading) {
-                ((ActivityWithLoading) fragment.getActivity()).stopLoading();
+                fragment.stopLoading();
             }
         }
     }
@@ -89,7 +89,7 @@ public class ProductControl {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String url = Constants.SERVER_URL + "getProduct?id=" + id;
+                    String url = Constants.SERVER_URL + "getProductById?id=" + id;
                     JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {

@@ -77,11 +77,12 @@ public class RegisterProductActivity extends ActivityWithLoading {
         int id;
 
         if (b != null) {
-            mIsEditing = b.getBoolean("isEditing");
-            id = b.getInt("prodcutId");
+            mIsEditing = b.getBoolean(Constants.IS_EDITING);
+            id = b.getInt(Constants.PRODUCT_ID);
 
             if (mIsEditing) {
                 mSelectedPicture = true;
+                this.startLoading(null);
                 ProductControl.getInstance().getProductById(this, id);
             }
         }
@@ -93,7 +94,6 @@ public class RegisterProductActivity extends ActivityWithLoading {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
     }
 
     @Override
@@ -215,10 +215,9 @@ public class RegisterProductActivity extends ActivityWithLoading {
             mProductNameEditText.setError(getResources().getString(R.string.min_product_name_length));
             return false;
         }
-        String price = mProductPriceEditText.getText().toString();
-        String cleanPriceString = price.replaceAll("[R$]", "");
-        cleanPriceString = cleanPriceString.replaceAll("[.]", "");
-        cleanPriceString = cleanPriceString.replaceAll(",", ".");
+
+        String cleanPriceString = Utils.clearPrice(mProductPriceEditText);
+
         if (Float.valueOf(cleanPriceString) <= 0) {
             mProductPriceEditText.setError(getResources().getString(R.string.min_product_price));
             return false;
@@ -420,10 +419,7 @@ public class RegisterProductActivity extends ActivityWithLoading {
             product.setImageBase64(intent.getExtras().getString(Constants.BASE64_IMAGE));
         }
 
-        String price = mProductPriceEditText.getText().toString();
-        String cleanPriceString = price.replaceAll("[R$]", "");
-        cleanPriceString = cleanPriceString.replaceAll("[.]", "");
-        cleanPriceString = cleanPriceString.replaceAll(",", ".");
+        String cleanPriceString = Utils.clearPrice(mProductPriceEditText);
 
         product.setPrice(Float.valueOf(cleanPriceString));
         product.setQtd(Integer.valueOf(mProductQtdEditText.getText().toString().trim()));
@@ -434,6 +430,7 @@ public class RegisterProductActivity extends ActivityWithLoading {
             ProductControl.getInstance().saveProduct(RegisterProductActivity.this, product);
         }
     }
+
     /**
      * Registering all broadcast from this class
      */

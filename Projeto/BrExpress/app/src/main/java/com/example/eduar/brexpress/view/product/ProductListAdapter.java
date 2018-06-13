@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.model.Product;
+import com.example.eduar.brexpress.utils.Constants;
 import com.example.eduar.brexpress.utils.Utils;
 
 import java.util.ArrayList;
@@ -71,12 +72,12 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
                 } else {
                     if (isAdmin) {
                         Intent i = new Intent(mFragment.getActivity(), RegisterProductActivity.class);
-                        i.putExtra("isEditing", true);
-                        i.putExtra("prodcutId", p.getId());
+                        i.putExtra(Constants.IS_EDITING, true);
+                        i.putExtra(Constants.PRODUCT_ID, p.getId());
                         mFragment.getActivity().startActivity(i);
                     } else {
                         Intent i = new Intent(mFragment.getActivity(), ProductDetailActivity.class);
-                        i.putExtra("productId", p.getId());
+                        i.putExtra(Constants.PRODUCT_ID, p.getId());
                         mFragment.getActivity().startActivity(i);
                     }
                 }

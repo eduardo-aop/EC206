@@ -86,14 +86,6 @@ public class ClientListFragment extends FragmentWithLoading {
                 loadClients();
             }
         });
-
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), RegisterProductActivity.class);
-                getActivity().startActivity(i);
-            }
-        });
     }
 
     private void loadClients() {

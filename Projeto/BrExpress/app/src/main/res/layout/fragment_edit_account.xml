@@ -18,65 +18,73 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/name"
+                android:id="@+id/name_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="@string/name"
+                android:textColorHint="@android:color/darker_gray"
                 android:maxLines="1"/>
 
             <EditText
-                android:id="@+id/email"
+                android:id="@+id/email_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="@string/email"
+                android:textColorHint="@android:color/darker_gray"
                 android:maxLines="1"
+                android:enabled="false"
                 android:inputType="textEmailAddress" />
 
             <EditText
-                android:id="@+id/address"
+                android:id="@+id/address_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="@string/address"
+                android:textColorHint="@android:color/darker_gray"
                 android:maxLines="1"/>
 
             <EditText
-                android:id="@+id/cpf"
+                android:id="@+id/cpf_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="@string/cpf"
+                android:textColorHint="@android:color/darker_gray"
                 android:maxLength="11"
                 android:maxLines="1"
                 android:inputType="number" />
 
             <EditText
-                android:id="@+id/old_pwd"
+                android:id="@+id/old_pwd_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:maxLines="1"
                 android:hint="@string/old_password"
+                android:textColorHint="@android:color/darker_gray"
                 android:inputType="textPassword"/>
 
             <EditText
-                android:id="@+id/pwd"
+                android:id="@+id/pwd_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:maxLines="1"
                 android:hint="@string/password"
+                android:textColorHint="@android:color/darker_gray"
                 android:inputType="textPassword"/>
 
             <EditText
-                android:id="@+id/confirm_pwd"
+                android:id="@+id/confirm_pwd_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:maxLines="1"
                 android:hint="@string/confirm_password"
+                android:textColorHint="@android:color/darker_gray"
                 android:inputType="textPassword" />
 
         </LinearLayout>

@@ -19,7 +19,7 @@ public class SupportFragment extends FragmentWithLoading {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_client_list, container, false);
+        View v = inflater.inflate(R.layout.fragment_support, container, false);
         return v;
     }
 }

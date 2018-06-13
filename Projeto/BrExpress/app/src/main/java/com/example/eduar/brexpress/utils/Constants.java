@@ -30,6 +30,12 @@ public class Constants {
     public static final String CLIENT_UPDATED_SUCCESSFULLY = "clientUpdatedSuccessfully";
     public static final String CLIENT_UPDATED_ERROR = "clientUpdatedSavedError";
 
+    public static final String WORKER_SAVED_SUCCESSFULLY = "workerSavedSuccessfully";
+    public static final String WORKER_SAVED_ERROR = "workerSavedError";
+
+    public static final String WORKER_UPDATED_SUCCESSFULLY = "workerUpdatedSuccessfully";
+    public static final String WORKER_UPDATED_ERROR = "workerUpdatedSavedError";
+
     public static final String LOGIN_SUCCESS = "loginSuccess";
     public static final String LOGIN_ERROR = "loginError";
 
@@ -38,6 +44,9 @@ public class Constants {
     public static final String USER_NAME = "userName";
     public static final String USER_ID = "userId";
     public static final String USER_TYPE = "userType";
+    public static final String PRODUCT_ID = "productId";
+    public static final String WORKER_ID = "workerId";
+    public static final String IS_EDITING = "isEditing";
 
     public static final String DIALOG_ACTION_CLICK = "dialogActionClick";
     public static final String CONFIRMED_ACTION = "confirmedAction";

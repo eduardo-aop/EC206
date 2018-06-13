@@ -35,7 +35,8 @@ public class MainActivity extends ActivityWithLoading {
     private Toolbar mToolbar;
 
     private boolean mIsAdmin = false;
-    private int mLastSelectedItem = R.id.product;
+    private int mLastSelectedAdminItem = R.id.product;
+    private int mLastSelectedUserItem = R.id.home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,7 +173,8 @@ public class MainActivity extends ActivityWithLoading {
         styleNavigationDrawerMenu();
         styleNavigationDrawerHeader();
 
-        checkItem(mLastSelectedItem);
+        if (mIsAdmin) checkItem(mLastSelectedAdminItem);
+        else checkItem(mLastSelectedUserItem);
     }
 
     private void styleNavigationDrawerMenu() {
@@ -189,19 +191,20 @@ public class MainActivity extends ActivityWithLoading {
 
         if (userName != null) {
             mUserNameTextView.setText(userName);
-            mTextView.setVisibility(View.VISIBLE);
-            mTextView.setText(getResources().getString(R.string.see_profile));
+            mTextView.setVisibility(View.GONE);
             mFirstLetterTextView.setText(String.valueOf(userName.charAt(0)).toUpperCase());
         } else {
             mUserNameTextView.setText(getResources().getString(R.string.do_login));
-            mTextView.setVisibility(View.GONE);
+            mTextView.setVisibility(View.VISIBLE);
+            mTextView.setText(getResources().getString(R.string.do_login));
             mFirstLetterTextView.setText(getResources().getString(R.string.br));
         }
     }
 
     public void checkItem(int id) {
         int size = mNavigationView.getMenu().size();
-        mLastSelectedItem = id;
+        if (mIsAdmin) mLastSelectedAdminItem = id;
+        else mLastSelectedUserItem = id;
 
         for (int i = 0; i < size; i++) {
             MenuItem item = mNavigationView.getMenu().getItem(i);
