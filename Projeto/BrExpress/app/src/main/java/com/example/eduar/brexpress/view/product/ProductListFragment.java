@@ -89,7 +89,6 @@ public class ProductListFragment extends FragmentWithLoading {
             mFab.setVisibility(View.GONE);
         }
         loadProducts();
-        this.startLoading(null);
     }
 
 
@@ -137,6 +136,7 @@ public class ProductListFragment extends FragmentWithLoading {
     }
 
     private void loadProducts() {
+        this.startLoading(null);
         ProductControl productControl = ProductControl.getInstance();
         productControl.getAllProducts(this);
     }
@@ -184,6 +184,7 @@ public class ProductListFragment extends FragmentWithLoading {
                             ProductControl.getInstance().deleteProducts((ActivityWithLoading) getActivity(), mAdapter.getSelectedProducts());
                             break;
                         case Constants.PRODUCT_DELETED_SUCCESS:
+                            ProductListFragment.this.stopLoading();
                             Toast.makeText(getActivity(), R.string.products_removed_success, Toast.LENGTH_LONG).show();
                             loadProducts();
                             mAdapter.setSelectedProducts(new ArrayList<Integer>());

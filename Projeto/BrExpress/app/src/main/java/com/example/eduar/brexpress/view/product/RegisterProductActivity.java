@@ -337,6 +337,7 @@ public class RegisterProductActivity extends ActivityWithLoading {
     public void productDetailLoadedError() {
         this.stopLoading();
         Toast.makeText(this, R.string.failed_to_load_products, Toast.LENGTH_LONG).show();
+        this.finish();
     }
 
     public void imageDownloaded(InputStream inputStream, int id) {

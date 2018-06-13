@@ -16,6 +16,7 @@ import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.utils.Utils;
 import com.example.eduar.brexpress.view.product.OrderListFragment;
 import com.example.eduar.brexpress.view.product.ProductListFragment;
+import com.example.eduar.brexpress.view.shipping.ShippingListFragment;
 import com.example.eduar.brexpress.view.support.SupportFragment;
 import com.example.eduar.brexpress.view.user.ClientListFragment;
 import com.example.eduar.brexpress.view.user.EditAccountFragment;
@@ -124,6 +125,7 @@ public class MainActivity extends ActivityWithLoading {
                 replaceFragment(new ClientListFragment());
                 break;
             case R.id.shipping:
+                replaceFragment(new ShippingListFragment());
                 break;
             case R.id.logout:
                 Utils.clearUserData(MainActivity.this);

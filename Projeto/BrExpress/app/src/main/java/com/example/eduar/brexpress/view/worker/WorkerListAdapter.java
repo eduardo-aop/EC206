@@ -48,22 +48,22 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Vi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Worker p = mWorkers.get(position);
+        final Worker w = mWorkers.get(position);
 
-        holder.mNameTextView.setText(p.getName());
-        holder.mFunctionTextView.setText(p.getFunction());
-        holder.mSectorTextView.setText(p.getSector());
-        holder.mFirstLetterTextView.setText(String.valueOf(p.getName().charAt(0)).toUpperCase());
+        holder.mNameTextView.setText(w.getName());
+        holder.mFunctionTextView.setText(w.getFunction());
+        holder.mSectorTextView.setText(w.getSector());
+        holder.mFirstLetterTextView.setText(String.valueOf(w.getName().charAt(0)).toUpperCase());
 
         holder.mContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mIsEditing) {
-                    containerStyle(holder, selectProduct(p.getId()));
+                    containerStyle(holder, selectProduct(w.getId()));
                 } else {
                     Intent i = new Intent(mFragment.getActivity(), RegisterWorkerActivity.class);
                     i.putExtra(Constants.IS_EDITING, true);
-                    i.putExtra(Constants.WORKER_ID, p.getId());
+                    i.putExtra(Constants.WORKER_ID, w.getId());
                     mFragment.getActivity().startActivity(i);
                 }
             }
@@ -73,13 +73,13 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Vi
             holder.mContainer.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    containerStyle(holder, selectProduct(p.getId()));
+                    containerStyle(holder, selectProduct(w.getId()));
                     return true;
                 }
             });
         }
 
-        containerStyle(holder, mSelectedWorkers.contains(p.getId()));
+        containerStyle(holder, mSelectedWorkers.contains(w.getId()));
     }
 
     private void containerStyle(ViewHolder holder, boolean selected) {
@@ -116,6 +116,18 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Vi
 
     public void notifyDataChanged(List<Worker> users) {
         mWorkers = users;
+        this.notifyDataSetChanged();
+    }
+
+    public List<Integer> getSelectedWorkers() {
+        return this.mSelectedWorkers;
+    }
+
+    public void setSelectedWorkers(List<Integer> list) {
+        this.mSelectedWorkers = list;
+        if (mSelectedWorkers.isEmpty()) {
+            this.mIsEditing = false;
+        }
         this.notifyDataSetChanged();
     }
 

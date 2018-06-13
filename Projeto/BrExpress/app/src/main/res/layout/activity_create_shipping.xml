@@ -33,66 +33,24 @@
                 android:maxLines="1"/>
 
             <EditText
-                android:id="@+id/email_text"
+                android:id="@+id/company_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:hint="@string/email"
+                android:hint="@string/company"
                 android:textColorHint="@android:color/darker_gray"
                 android:maxLines="1"
                 android:inputType="textEmailAddress" />
 
             <EditText
-                android:id="@+id/address_text"
+                android:id="@+id/payment_text"
                 style="@style/LoginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:hint="@string/address"
-                android:textColorHint="@android:color/darker_gray"
-                android:maxLines="1"/>
-
-
-            <EditText
-                android:id="@+id/cpf_text"
-                style="@style/LoginEditText"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="@string/cpf"
-                android:textColorHint="@android:color/darker_gray"
-                android:maxLength="11"
-                android:maxLines="1"
-                android:inputType="number" />
-
-            <EditText
-                android:id="@+id/salary_text"
-                style="@style/LoginEditText"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="@string/salary"
+                android:hint="@string/payment"
                 android:textColorHint="@android:color/darker_gray"
                 android:maxLines="1"
                 android:inputType="number"/>
-
-            <EditText
-                android:id="@+id/sector_text"
-                style="@style/LoginEditText"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="@string/sector"
-                android:textColorHint="@android:color/darker_gray"
-                android:maxLines="1"
-                android:inputType="textAutoComplete"/>
-
-            <EditText
-                android:id="@+id/function_text"
-                style="@style/LoginEditText"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="@string/function"
-                android:textColorHint="@android:color/darker_gray"
-                android:maxLines="1"
-                android:inputType="textAutoCorrect"/>
-
 
         </LinearLayout>
     </ScrollView>

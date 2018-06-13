@@ -10,12 +10,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.eduar.brexpress.R;
+import com.example.eduar.brexpress.model.Shipping;
 import com.example.eduar.brexpress.model.Worker;
 import com.example.eduar.brexpress.service.GsonRequest;
 import com.example.eduar.brexpress.utils.Constants;
 import com.example.eduar.brexpress.utils.Utils;
 import com.example.eduar.brexpress.view.ActivityWithLoading;
 import com.example.eduar.brexpress.view.FragmentWithLoading;
+import com.example.eduar.brexpress.view.shipping.RegisterShippingActivity;
+import com.example.eduar.brexpress.view.shipping.ShippingListFragment;
 import com.example.eduar.brexpress.view.worker.RegisterWorkerActivity;
 import com.example.eduar.brexpress.view.worker.WorkerListFragment;
 import com.google.gson.Gson;
@@ -32,43 +35,43 @@ import java.util.List;
  * Created by eduar on 11/06/2018.
  */
 
-public class WorkerControl {
+public class ShippingControl {
 
-    private static WorkerControl mInstance = null;
+    private static ShippingControl mInstance = null;
 
-    public static WorkerControl getInstance() {
+    public static ShippingControl getInstance() {
         if (mInstance == null)
-            mInstance = new WorkerControl();
+            mInstance = new ShippingControl();
         return mInstance;
     }
 
-    private WorkerControl() {
+    private ShippingControl() {
 
     }
 
-    public void getAllWorkers(final FragmentWithLoading fragment) {
+    public void getAllShipping(final FragmentWithLoading fragment) {
         if (Utils.isNetworkAvailable(fragment.getContext())) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String url = Constants.SERVER_URL + "getWorkers?id=" + Utils.getUserId(fragment.getContext());
+                    String url = Constants.SERVER_URL + "getAllShipping";
                     JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
                         @Override
                         public void onResponse(JSONArray response) {
-                            Log.d(WorkerControl.class.getName(), "Get ALL Works");
+                            Log.d(ShippingControl.class.getName(), "Get ALL Works");
                             Gson gson = new Gson();
-                            Type listType = new TypeToken<List<Worker>>(){}.getType();
-                            List<Worker> workerList = gson.fromJson(response.toString(), listType);
-                            if (fragment instanceof WorkerListFragment) {
-                                ((WorkerListFragment) fragment).allClientsLoaded(workerList);
+                            Type listType = new TypeToken<List<Shipping>>(){}.getType();
+                            List<Shipping> shippingList = gson.fromJson(response.toString(), listType);
+                            if (fragment instanceof ShippingListFragment) {
+                                ((ShippingListFragment) fragment).allShippingLoaded(shippingList);
                             }
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.d(WorkerControl.class.getName(), "Get ALL does not Work");
-                            if (fragment instanceof WorkerListFragment) {
-                                ((WorkerListFragment) fragment).allClientsLoadedError();
+                            Log.d(ShippingControl.class.getName(), "Get ALL does not Work");
+                            if (fragment instanceof ShippingListFragment) {
+                                ((ShippingListFragment) fragment).allShippingLoadedError();
                             }
                         }
                     });
@@ -82,28 +85,28 @@ public class WorkerControl {
         }
     }
 
-    public void getWorkerById(final ActivityWithLoading activity, final int id) {
+    public void getShippingById(final ActivityWithLoading activity, final int id) {
         if (Utils.isNetworkAvailable(activity)) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String url = Constants.SERVER_URL + "getWorkerById?id=" + id;
+                    String url = Constants.SERVER_URL + "getShippingById?id=" + id;
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            Log.d(ProductControl.class.getName(), "Get By Id Works");
+                            Log.d(ShippingControl.class.getName(), "Get By Id Works");
                             Gson gson = new Gson();
-                            Worker worker = gson.fromJson(response.toString(), Worker.class);
-                            if (activity instanceof RegisterWorkerActivity) {
-                                ((RegisterWorkerActivity) activity).workerLoaded(worker);
+                            Shipping shipping = gson.fromJson(response.toString(), Shipping.class);
+                            if (activity instanceof RegisterShippingActivity) {
+                                ((RegisterShippingActivity) activity).shippingLoaded(shipping);
                             }
                         }
                     },  new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.d(ClientControl.class.getName(), "Get ALL does not Work");
-                            if (activity instanceof RegisterWorkerActivity) {
-                                ((RegisterWorkerActivity) activity).workerLoadedError();
+                            Log.d(ShippingControl.class.getName(), "Get ALL does not Work");
+                            if (activity instanceof RegisterShippingActivity) {
+                                ((RegisterShippingActivity) activity).shippingLoadedError();
                             }
                         }
                     });
@@ -113,31 +116,29 @@ public class WorkerControl {
             }).start();
         } else {
             Toast.makeText(activity, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-            if (activity instanceof ActivityWithLoading) {
-                activity.stopLoading();
-            }
+            activity.stopLoading();
         }
     }
 
-    public void saveWorker(final ActivityWithLoading activity, final Worker worker) {
+    public void saveShipping(final ActivityWithLoading activity, final Shipping shipping) {
         if (Utils.isNetworkAvailable(activity)) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String url = Constants.SERVER_URL + "saveWorker";
-                    GsonRequest gsonRequest = new GsonRequest(Request.Method.POST, url, Worker.class, null,
-                            worker.converToJson(), new Response.Listener() {
+                    String url = Constants.SERVER_URL + "saveShipping";
+                    GsonRequest gsonRequest = new GsonRequest(Request.Method.POST, url, Shipping.class, null,
+                            shipping.converToJson(), new Response.Listener() {
                         @Override
                         public void onResponse(Object response) {
-                            Log.d(ClientControl.class.getName(), "Update Works");
-                            Intent intent = new Intent(Constants.WORKER_SAVED_SUCCESSFULLY);
+                            Log.d(ShippingControl.class.getName(), "Save Works");
+                            Intent intent = new Intent(Constants.SHIPPING_SAVED_SUCCESSFULLY);
                             activity.sendBroadcast(intent);
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.d(ClientControl.class.getName(), "Update does not Work");
-                            Intent intent = new Intent(Constants.WORKER_SAVED_ERROR);
+                            Log.d(ShippingControl.class.getName(), "Save does not Work");
+                            Intent intent = new Intent(Constants.SHIPPING_SAVED_ERROR);
                             activity.sendBroadcast(intent);
                         }
                     });
@@ -150,26 +151,26 @@ public class WorkerControl {
         }
     }
 
-    public void updateWorker(final ActivityWithLoading activity, final Worker worker) {
+    public void updateShipping(final ActivityWithLoading activity, final Shipping shipping) {
         if (Utils.isNetworkAvailable(activity)) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String url = Constants.SERVER_URL + "updateWorker";
-                    String j = worker.converToJson();
-                    GsonRequest gsonRequest = new GsonRequest(Request.Method.PUT, url, Worker.class, null,
-                            worker.converToJson(), new Response.Listener() {
+                    String url = Constants.SERVER_URL + "updateShipping";
+
+                    GsonRequest gsonRequest = new GsonRequest(Request.Method.PUT, url, Shipping.class, null,
+                            shipping.converToJson(), new Response.Listener() {
                         @Override
                         public void onResponse(Object response) {
-                            Log.d(ClientControl.class.getName(), "Update Works");
-                            Intent intent = new Intent(Constants.WORKER_UPDATED_SUCCESSFULLY);
+                            Log.d(ShippingControl.class.getName(), "Update Works");
+                            Intent intent = new Intent(Constants.SHIPPING_UPDATED_SUCCESSFULLY);
                             activity.sendBroadcast(intent);
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.d(ClientControl.class.getName(), "Update does not Work");
-                            Intent intent = new Intent(Constants.WORKER_UPDATED_ERROR);
+                            Log.d(ShippingControl.class.getName(), "Update does not Work");
+                            Intent intent = new Intent(Constants.SHIPPING_UPDATED_ERROR);
                             activity.sendBroadcast(intent);
                         }
                     });
@@ -182,32 +183,31 @@ public class WorkerControl {
         }
     }
 
-    public void deleteWorkers(final ActivityWithLoading activity, final List<Integer> ids) {
+    public void deleteShipping(final ActivityWithLoading activity, final List<Integer> ids) {
         if (Utils.isNetworkAvailable(activity)) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String url = Constants.SERVER_URL + "deleteWorkers";
+                    String url = Constants.SERVER_URL + "deleteShipping";
                     JSONObject jsonObject = new JSONObject();
                     try {
                         jsonObject.put("ids", ids);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    String json = new Gson().toJson(ids);
 
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, jsonObject, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             Log.d(ProductControl.class.getName(), "Delete ALL Works");
-                            Intent intent = new Intent(Constants.WORKER_DELETED_SUCCESSFULLY);
+                            Intent intent = new Intent(Constants.SHIPPING_DELETED_SUCCESSFULLY);
                             activity.sendBroadcast(intent);
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Log.d(ProductControl.class.getName(), "Delete ALL does not Work");
-                            Intent intent = new Intent(Constants.WORKER_DELETED_ERROR);
+                            Intent intent = new Intent(Constants.SHIPPING_DELETED_ERROR);
                             activity.sendBroadcast(intent);
                         }
                     });

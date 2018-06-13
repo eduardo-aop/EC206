@@ -7,7 +7,7 @@ package com.example.eduar.brexpress.utils;
 public class Constants {
 
     //server ip and port address
-    public static String SERVER_URL = "http://192.168.0.11:8000/";
+    public static String SERVER_URL = "http://192.168.0.12:8000/";
 
     public static String EMAIL_REGEX = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"" +
             "(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\"" +
@@ -36,6 +36,18 @@ public class Constants {
     public static final String WORKER_UPDATED_SUCCESSFULLY = "workerUpdatedSuccessfully";
     public static final String WORKER_UPDATED_ERROR = "workerUpdatedSavedError";
 
+    public static final String WORKER_DELETED_SUCCESSFULLY = "workerDeletedSuccessfully";
+    public static final String WORKER_DELETED_ERROR = "workerDeletedSavedError";
+
+    public static final String SHIPPING_SAVED_SUCCESSFULLY = "shippingSavedSuccessfully";
+    public static final String SHIPPING_SAVED_ERROR = "shippingSavedError";
+
+    public static final String SHIPPING_UPDATED_SUCCESSFULLY = "shippingUpdatedSuccessfully";
+    public static final String SHIPPING_UPDATED_ERROR = "shippingUpdatedSavedError";
+
+    public static final String SHIPPING_DELETED_SUCCESSFULLY = "shippingDeletedSuccessfully";
+    public static final String SHIPPING_DELETED_ERROR = "shippingDeletedSavedError";
+
     public static final String LOGIN_SUCCESS = "loginSuccess";
     public static final String LOGIN_ERROR = "loginError";
 
@@ -46,6 +58,7 @@ public class Constants {
     public static final String USER_TYPE = "userType";
     public static final String PRODUCT_ID = "productId";
     public static final String WORKER_ID = "workerId";
+    public static final String SHIPPING_ID = "shippingId";
     public static final String IS_EDITING = "isEditing";
 
     public static final String DIALOG_ACTION_CLICK = "dialogActionClick";

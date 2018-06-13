@@ -159,7 +159,7 @@ app.post('/deleteWorkers', function(req, res) {
 
 	var ids = JSON.parse(req.body.ids);
 	console.log(ids);
-	var sql = 'DELETE FROM client WHERE id IN (?)';
+	var sql = 'DELETE FROM client WHERE worker_id IN (?)';
 	con.query(sql, [ids], function (err, result, fields) {
 		if (err) throw err;
 	
@@ -322,6 +322,76 @@ app.get('/getOrders', function(req, res) {
 	});
 });
 
+/**
+* SHIPPING
+*/
+app.post('/saveShipping', function(req, res) {
+    console.log(req.body);
+
+	var id = 0;
+	var sql = 'INSERT INTO shipping (name, company, payment) VALUES (?,?,?)';
+	con.query(sql, [req.body.name, req.body.company, req.body.payment], function (err, result, fields) {
+		if (err) throw err;
+		console.log(result);
+		res.end();
+	});
+});
+
+app.put('/updateShipping', function(req, res) {
+    console.log(req.body);
+
+	var id = req.body.id
+	console.log('id: '+ id);
+	var sql = 'UPDATE shipping SET name = ?, company = ?, payment = ? WHERE id = ?';
+	con.query(sql, [req.body.name, req.body.company, req.body.payment, id], function (err, result, fields) {
+		if (err) throw err;
+		res.end();
+	});
+});
+
+app.get('/getAllShipping', function(req, res) {
+    console.log(req.body);
+
+	var id = req.query.id;
+	var sql = 'SELECT * FROM shipping ORDER BY name';
+	con.query(sql, [id], function (err, result, fields) {
+		if (err) throw err;
+		
+	    console.log(result);
+		res.send(result);
+	});
+});
+
+app.get('/getShippingById', function(req, res) {
+    console.log(req.query.id);
+
+	var id = req.query.id;
+	var sql = 'SELECT * FROM shipping WHERE id = ?';
+	con.query(sql, [id], function (err, result, fields) {
+		if (err) throw err;
+		
+	    console.log(result[0]);
+		res.send(result[0]);
+	});
+});
+
+app.post('/deleteShipping', function(req, res) {
+    console.log(req.body);
+
+	var ids = JSON.parse(req.body.ids);
+	console.log(ids);
+	var sql = 'DELETE FROM shipping WHERE id IN (?)';
+	con.query(sql, [ids], function (err, result, fields) {
+		if (err) throw err;
+	
+	    console.log(result);
+		res.send(result);
+	});
+});
+
+/**
+* THREAD TO RUN EACH 1 MINUTE TO CHANGE PURCHASE STATUS
+*/
 function purchaseStatusChange() {
 	setInterval(function() {
 		console.log("called");
@@ -334,7 +404,7 @@ function purchaseStatusChange() {
 	}, 1000*60);
 }
 
-var server = app.listen(8000, '192.168.0.11', function () {
+var server = app.listen(8000, '192.168.0.12', function () {
 	var host = server.address().address
 	var port = server.address().port
 

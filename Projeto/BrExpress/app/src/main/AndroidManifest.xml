@@ -26,6 +26,7 @@
         <activity android:name=".view.user.LoginActivity" />
         <activity android:name=".view.user.CreateAccountActivity" />
         <activity android:name=".view.worker.RegisterWorkerActivity" />
+        <activity android:name=".view.shipping.RegisterShippingActivity" />
         <activity android:name=".view.product.CreditCardActivity" />
     </application>
 

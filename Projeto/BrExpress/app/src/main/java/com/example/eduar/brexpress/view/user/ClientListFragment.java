@@ -69,11 +69,6 @@ public class ClientListFragment extends FragmentWithLoading {
 
         mIsAdmin = Utils.getUserType(this.getContext());
 
-        if (mIsAdmin) {
-            mFab.setVisibility(View.VISIBLE);
-        } else {
-            mFab.setVisibility(View.GONE);
-        }
         loadClients();
         this.startLoading(null);
     }

@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.control.WorkerControl;
-import com.example.eduar.brexpress.model.User;
 import com.example.eduar.brexpress.model.Worker;
 import com.example.eduar.brexpress.utils.Constants;
 import com.example.eduar.brexpress.utils.Utils;
@@ -64,8 +63,7 @@ public class RegisterWorkerActivity extends ActivityWithLoading {
             mWorkerId = b.getInt(Constants.WORKER_ID);
 
             if (mIsEditing) {
-                this.startLoading(null);
-                WorkerControl.getInstance().getWorkerById(this, mWorkerId);
+                loadWorkers();
             }
         }
 
@@ -109,6 +107,11 @@ public class RegisterWorkerActivity extends ActivityWithLoading {
         return super.onOptionsItemSelected(item);
     }
 
+    private void loadWorkers() {
+        this.startLoading(null);
+        WorkerControl.getInstance().getWorkerById(this, mWorkerId);
+    }
+
     public void workerLoaded(Worker worker) {
         this.stopLoading();
         mEditingWorker = worker;
@@ -124,6 +127,7 @@ public class RegisterWorkerActivity extends ActivityWithLoading {
     public void workerLoadedError() {
         this.stopLoading();
         Toast.makeText(this, R.string.failed_to_load_orders, Toast.LENGTH_LONG).show();
+        this.finish();
     }
 
     private void setMockObject() {

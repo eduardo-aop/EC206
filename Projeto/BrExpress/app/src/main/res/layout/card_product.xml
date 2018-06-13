@@ -31,7 +31,8 @@
                     android:id="@+id/discount_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top|end">
+                    android:layout_gravity="top|end"
+                    android:layout_marginEnd="-10dp">
                     <ImageView
                         android:id="@+id/discount_image"
                         android:layout_width="75dp"

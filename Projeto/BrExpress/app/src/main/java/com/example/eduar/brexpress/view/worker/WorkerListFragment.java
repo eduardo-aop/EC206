@@ -1,6 +1,9 @@
 package com.example.eduar.brexpress.view.worker;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,11 +20,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.eduar.brexpress.R;
+import com.example.eduar.brexpress.control.ProductControl;
 import com.example.eduar.brexpress.control.WorkerControl;
 import com.example.eduar.brexpress.model.Worker;
+import com.example.eduar.brexpress.utils.Constants;
 import com.example.eduar.brexpress.utils.Utils;
+import com.example.eduar.brexpress.view.ActivityWithLoading;
 import com.example.eduar.brexpress.view.FragmentWithLoading;
-import com.example.eduar.brexpress.view.product.RegisterProductActivity;
+import com.example.eduar.brexpress.view.product.ProductListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +45,7 @@ public class WorkerListFragment extends FragmentWithLoading {
     private FloatingActionButton mFab;
 
     private boolean mIsAdmin = false;
+    private BroadcastReceiver mReceiver;
 
     @Nullable
     @Override
@@ -67,6 +74,9 @@ public class WorkerListFragment extends FragmentWithLoading {
     @Override
     public void onResume() {
         super.onResume();
+
+        broadcastReceiver();
+        registerBroadcasts();
 
         mIsAdmin = Utils.getUserType(this.getContext());
 
@@ -138,6 +148,49 @@ public class WorkerListFragment extends FragmentWithLoading {
         mSwipeRefresh.setRefreshing(false);
         mRecyclerView.setEnabled(true);
         this.stopLoading();
-        Toast.makeText(this.getContext(), R.string.failed_to_load_users, Toast.LENGTH_LONG).show();
+        Toast.makeText(this.getContext(), R.string.failed_to_load_workers, Toast.LENGTH_LONG).show();
+    }
+
+    private void broadcastReceiver() {
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                if (intent != null && intent.getAction() != null) {
+                    switch (intent.getAction()) {
+                        case Constants.CONFIRMED_ACTION:
+                            startLoading(null);
+                            WorkerControl.getInstance().deleteWorkers((ActivityWithLoading) getActivity(), mAdapter.getSelectedWorkers());
+                            break;
+                        case Constants.WORKER_DELETED_SUCCESSFULLY:
+                            WorkerListFragment.this.stopLoading();
+                            Toast.makeText(getActivity(), R.string.workers_removed_success, Toast.LENGTH_LONG).show();
+                            loadWorkers();
+                            mAdapter.setSelectedWorkers(new ArrayList<Integer>());
+                            getActivity().invalidateOptionsMenu();
+                            break;
+                        case Constants.WORKER_DELETED_ERROR:
+                            WorkerListFragment.this.stopLoading();
+                            Toast.makeText(getActivity(), R.string.workers_removed_error, Toast.LENGTH_LONG).show();
+                            break;
+                    }
+                }
+            }
+        };
+    }
+    /**
+     * Registering all broadcast from this class
+     */
+    private void registerBroadcasts() {
+        getActivity().registerReceiver(mReceiver, new IntentFilter(Constants.CONFIRMED_ACTION));
+        getActivity().registerReceiver(mReceiver, new IntentFilter(Constants.WORKER_DELETED_SUCCESSFULLY));
+        getActivity().registerReceiver(mReceiver, new IntentFilter(Constants.WORKER_DELETED_ERROR));
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(mReceiver);
     }
 }

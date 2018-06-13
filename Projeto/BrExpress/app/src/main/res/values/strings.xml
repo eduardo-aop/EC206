@@ -20,6 +20,8 @@
     <string name="product_price">Preço do Produto</string>
     <string name="discount">Desconto</string>
     <string name="quantity">Qtd</string>
+    <string name="company">Empresa</string>
+    <string name="payment">Mensalidade</string>
     <string name="product_description">Descrição do Produto</string>
     <string name="product_picture">Foto do Produto</string>
     <string name="save_data">Salvar Dados</string>
@@ -29,6 +31,8 @@
     <string name="login_invalid">Usuário e/ou senha incorretos</string>
     <string name="invalid_email">Campo email está inválido</string>
     <string name="invalid_cpf">Campo cpf está inválido</string>
+    <string name="invalid_company">Campo empresa deve conter no mínimo 5 caracters</string>
+    <string name="invalid_payment">Campo pagamento não pode ser zero</string>
     <string name="not_match_pwd">As senhas não conferem</string>
     <string name="min_pwd_length">Campo senha deve conter no mínimo 5 caracters</string>
     <string name="min_address_length">Campo endereço deve conter no mínimo 5 caracters</string>
@@ -46,6 +50,10 @@
     <string name="client_saved_error">Falha ao cadastrar. Tente Novamente!</string>
     <string name="client_updated_success">Perfil atualizado com sucesso!</string>
     <string name="client_updated_error">Falha ao atualizar perfil. Verifique sua senha antiga!</string>
+    <string name="shipping_saved_success">Cadastrado realizado com sucesso!</string>
+    <string name="shipping_saved_error">Falha ao cadastrar. Tente Novamente!</string>
+    <string name="shipping_updated_success">Transportadora atualizada com sucesso!</string>
+    <string name="shipping_updated_error">Falha ao atualizar transportadora. Verifique sua senha antiga!</string>
     <string name="no_internet_connection">Sem conexão com a internet.</string>
     <string name="failed_to_load_user">Falha ao carregar perfil</string>
     <string name="failed_to_load_products">Falha ao carregar produtos</string>
@@ -53,6 +61,7 @@
     <string name="failed_to_load_orders">Falha ao carregar pedidos</string>
     <string name="failed_to_load_worker">Falha ao carregar funcionário</string>
     <string name="failed_to_load_workers">Falha ao carregar funcionários</string>
+    <string name="failed_to_load_all_shipping">Falha ao carregar transportadoras</string>
     <string name="price">R$ %1$.2f</string>
     <string name="valor">Valor</string>
     <string name="discount_image">%1$.0f%% Off</string>
@@ -75,9 +84,17 @@
         Esta Ação não poderá ser desfeita.</string>
     <string name="confirm_delete_workers">Realmente deseja remover estes funcionários?
     Esta Ação não poderá ser desfeita.</string>
+    <string name="confirm_delete_shipping">Realmente deseja remover estas transportadoras?
+    Esta Ação não poderá ser desfeita.</string>
     <string name="remove">Remover</string>
     <string name="products_removed_success">Produtos removidos com sucesso!</string>
     <string name="products_removed_error">Falha ao remover produtos. Tente novamente!</string>
+
+    <string name="workers_removed_success">Funcionários removidos com sucesso!</string>
+    <string name="workers_removed_error">Falha ao remover funcionário. Tente novamente!</string>
+
+    <string name="shipping_removed_success">Transportadoras removidas com sucesso!</string>
+    <string name="shipping_removed_error">Falha ao remover transportadoras. Tente novamente!</string>
 
     <string name="products_bought_success">Parabéns. Acompanhe a entrega do pedido pelo histórico de compras!</string>
     <string name="products_bought_error">Falha ao comprar o produto. Tente novamente!</string>
