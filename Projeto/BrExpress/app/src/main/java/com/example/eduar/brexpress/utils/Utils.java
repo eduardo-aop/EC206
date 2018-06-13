@@ -156,6 +156,24 @@ public class Utils {
         builder.show();
     }
 
+    public static void createDialogWithNoNegativeButton(final Context context, int title, int message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Intent intent = new Intent(Constants.CONFIRMED_ACTION);
+                context.sendBroadcast(intent);
+            }
+        });
+
+        builder.setTitle(title);
+        builder.setMessage(message);
+
+        builder.create();
+
+        builder.show();
+    }
+
     public static boolean getUserType(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
         boolean isAdming = prefs.getBoolean(Constants.USER_TYPE, false);

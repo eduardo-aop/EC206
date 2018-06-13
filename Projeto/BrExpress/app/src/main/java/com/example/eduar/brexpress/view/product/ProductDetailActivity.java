@@ -125,6 +125,7 @@ public class ProductDetailActivity extends ActivityWithLoading {
     public void productDetailLoadedError() {
         this.stopLoading();
         Toast.makeText(this, R.string.failed_to_load_products, Toast.LENGTH_LONG).show();
+        this.finish();
     }
 
     public void imageDownloaded(InputStream inputStream, int id) {
@@ -146,10 +147,13 @@ public class ProductDetailActivity extends ActivityWithLoading {
 
                 if (intent != null && intent.getAction() != null) {
                     switch (intent.getAction()) {
+                        case Constants.CONFIRMED_ACTION:
+                            ProductDetailActivity.this.finish();
+                            Toast.makeText(ProductDetailActivity.this, R.string.follow_history, Toast.LENGTH_LONG).show();
+                            break;
                         case Constants.PRODUCT_BOUGHT_SUCCESS:
                             stopLoading();
-                            Toast.makeText(ProductDetailActivity.this, R.string.products_bought_success, Toast.LENGTH_LONG).show();
-
+                            Utils.createDialogWithNoNegativeButton(ProductDetailActivity.this, R.string.tanks, R.string.working_for_credit_card);
                             break;
                         case Constants.PRODUCT_BOUGHT_ERROR:
                             stopLoading();
@@ -165,6 +169,7 @@ public class ProductDetailActivity extends ActivityWithLoading {
      * Registering all broadcast from this class
      */
     private void registerBroadcasts() {
+        registerReceiver(mReceiver, new IntentFilter(Constants.CONFIRMED_ACTION));
         registerReceiver(mReceiver, new IntentFilter(Constants.PRODUCT_BOUGHT_SUCCESS));
         registerReceiver(mReceiver, new IntentFilter(Constants.PRODUCT_BOUGHT_ERROR));
     }
