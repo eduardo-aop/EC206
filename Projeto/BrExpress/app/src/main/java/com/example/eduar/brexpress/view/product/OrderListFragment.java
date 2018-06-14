@@ -60,8 +60,8 @@ public class OrderListFragment extends FragmentWithLoading {
     public void onResume() {
         super.onResume();
 
-        loadOrders();
         this.startLoading(null);
+        loadOrders();
     }
 
     private void addListeners() {

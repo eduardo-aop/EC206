@@ -73,6 +73,9 @@ public class ShippingListFragment extends FragmentWithLoading {
     public void onResume() {
         super.onResume();
 
+        this.startLoading(null);
+        loadAllShipping();
+
         broadcastReceiver();
         registerBroadcasts();
 
@@ -83,8 +86,6 @@ public class ShippingListFragment extends FragmentWithLoading {
         } else {
             mFab.setVisibility(View.GONE);
         }
-        loadAllShipping();
-        this.startLoading(null);
     }
 
     @Override

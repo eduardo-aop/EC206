@@ -15,6 +15,7 @@ import com.example.eduar.brexpress.R;
 import com.example.eduar.brexpress.control.ClientControl;
 import com.example.eduar.brexpress.utils.Constants;
 import com.example.eduar.brexpress.view.ActivityWithLoading;
+import com.example.eduar.brexpress.view.MainActivity;
 
 import java.util.regex.Pattern;
 
@@ -65,7 +66,7 @@ public class LoginActivity extends ActivityWithLoading {
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LoginActivity.this.finish();
+                callMainActivity();
             }
         });
         
@@ -120,7 +121,8 @@ public class LoginActivity extends ActivityWithLoading {
                     switch (intent.getAction()) {
                         case Constants.LOGIN_SUCCESS:
                             LoginActivity.this.stopLoading();
-                            LoginActivity.this.finish();
+
+                            callMainActivity();
                             break;
                         case Constants.LOGIN_ERROR:
                             Toast.makeText(LoginActivity.this,
@@ -145,5 +147,16 @@ public class LoginActivity extends ActivityWithLoading {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void onBackPressed() {
+        callMainActivity();
+    }
+
+    private void callMainActivity() {
+        Intent i = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(i);
+        LoginActivity.this.finish();
     }
 }

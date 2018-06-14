@@ -37,6 +37,7 @@
     <string name="min_pwd_length">Campo senha deve conter no mínimo 5 caracters</string>
     <string name="min_address_length">Campo endereço deve conter no mínimo 5 caracters</string>
     <string name="min_product_name_length">Campo nome deve conter no mínimo 5 caracters</string>
+    <string name="min_product_description_length">Campo descrição deve conter no mínimo 15 caracters</string>
     <string name="min_product_price">Campo preço não pode ser zero</string>
     <string name="max_product_qtd_available">É permitido no máximo 999 unidades do produto</string>
     <string name="max_product_discount_available">É permitido no máximo 99% de desconto</string>
@@ -102,6 +103,8 @@
     <string name="working_for_credit_card">Parabéns pela compra. Estamos trabalhando para compras com cartão de crédito!</string>
     <string name="follow_history">Acompanhe seu pedido pelo histórico!</string>
     <string name="products_bought_error">Falha ao comprar o produto. Tente novamente!</string>
+    <string name="do_login_first">Faça login antes de comprar algum item!</string>
+    <string name="no_product_available">Produto esgotado!</string>
     <string name="buy">Comprar</string>
 
     <string name="card_name">Nome</string>

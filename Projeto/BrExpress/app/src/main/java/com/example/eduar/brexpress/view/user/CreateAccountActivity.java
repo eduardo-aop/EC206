@@ -49,7 +49,7 @@ public class CreateAccountActivity extends ActivityWithLoading {
         initAllComponents();
         broadcastReceiver();
         registerBroadcasts();
-        setMockObject();
+        //setMockObject();
     }
 
     private void setMockObject() {

@@ -77,6 +77,9 @@ public class ProductListFragment extends FragmentWithLoading {
     public void onResume() {
         super.onResume();
 
+        this.startLoading(null);
+        loadProducts();
+
         broadcastReceiver();
         registerBroadcasts();
 
@@ -88,7 +91,6 @@ public class ProductListFragment extends FragmentWithLoading {
         } else {
             mFab.setVisibility(View.GONE);
         }
-        loadProducts();
     }
 
 
@@ -136,7 +138,6 @@ public class ProductListFragment extends FragmentWithLoading {
     }
 
     private void loadProducts() {
-        this.startLoading(null);
         ProductControl productControl = ProductControl.getInstance();
         productControl.getAllProducts(this);
     }

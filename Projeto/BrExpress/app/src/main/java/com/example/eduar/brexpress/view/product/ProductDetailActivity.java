@@ -24,7 +24,6 @@ import com.example.eduar.brexpress.utils.Utils;
 import com.example.eduar.brexpress.view.ActivityWithLoading;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 
 /**
  * Created by eduar on 04/05/2018.
@@ -35,10 +34,10 @@ public class ProductDetailActivity extends ActivityWithLoading {
     private Product mProduct;
 
     private ImageView mImageView;
-    private TextView mName;
-    private TextView mPrice;
-    private TextView mQtd;
-    private TextView mDescription;
+    private TextView mNameTextView;
+    private TextView mPriceTextView;
+    private TextView mQtdTextView;
+    private TextView mDescriptionTextView;
     private Button mBuyButton;
     private BroadcastReceiver mReceiver;
 
@@ -87,25 +86,26 @@ public class ProductDetailActivity extends ActivityWithLoading {
     }
 
     private void initAllComponents() {
-        mName = findViewById(R.id.name_text);
-        mPrice = findViewById(R.id.price_text);
-        mDescription = findViewById(R.id.description_text);
-        mQtd = findViewById(R.id.qtd_text);
+        mNameTextView = findViewById(R.id.name_text);
+        mPriceTextView = findViewById(R.id.price_text);
+        mDescriptionTextView = findViewById(R.id.description_text);
+        mQtdTextView = findViewById(R.id.qtd_text);
         mImageView = findViewById(R.id.image);
         mBuyButton = findViewById(R.id.buy_button);
 
         mBuyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startLoading(null);
-                ProductControl.getInstance().buyProduct(ProductDetailActivity.this,
-                        Utils.getUserId(ProductDetailActivity.this),
-                        mProduct.getId());
-
-//                final int GET_NEW_CARD = 2;
-//
-//                Intent intent = new Intent(ProductDetailActivity.this, Card);
-//                startActivityForResult(intent,GET_NEW_CARD);
+                if (mProduct.getQtd() <= 0) {
+                    Toast.makeText(ProductDetailActivity.this, R.string.no_product_available, Toast.LENGTH_LONG).show();
+                } else if (Utils.getUserId(ProductDetailActivity.this) == -1) {
+                    Toast.makeText(ProductDetailActivity.this, R.string.do_login_first, Toast.LENGTH_LONG).show();
+                } else {
+                    startLoading(null);
+                    ProductControl.getInstance().buyProduct(ProductDetailActivity.this,
+                            Utils.getUserId(ProductDetailActivity.this),
+                            mProduct.getId());
+                }
             }
         });
     }
@@ -114,10 +114,11 @@ public class ProductDetailActivity extends ActivityWithLoading {
         this.stopLoading();
         mProduct = product;
 
-        mName.setText(product.getName());
-        mDescription.setText(product.getDescription());
-        mQtd.setText(String.valueOf(product.getQtd()));
-        mName.setText(product.getName());
+        mNameTextView.setText(product.getName());
+        mDescriptionTextView.setText(product.getDescription());
+        mQtdTextView.setText(String.valueOf(product.getQtd()));
+        String price = String.format(getResources().getString(R.string.price), product.getPriceWithDiscount());
+        mPriceTextView.setText(price);
 
         new ImageDownloader().execute(product.getId(), this, "productImage");
     }

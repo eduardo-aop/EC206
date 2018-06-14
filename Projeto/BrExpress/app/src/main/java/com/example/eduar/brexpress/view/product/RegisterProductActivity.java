@@ -216,6 +216,11 @@ public class RegisterProductActivity extends ActivityWithLoading {
             return false;
         }
 
+        if (mProductDescriptionEditText.getText().toString().length() < 5) {
+            mProductDescriptionEditText.setError(getResources().getString(R.string.min_product_name_length));
+            return false;
+        }
+
         String cleanPriceString = Utils.clearPrice(mProductPriceEditText);
 
         if (Float.valueOf(cleanPriceString) <= 0) {

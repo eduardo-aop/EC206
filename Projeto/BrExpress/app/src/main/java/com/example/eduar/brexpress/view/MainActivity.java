@@ -105,6 +105,7 @@ public class MainActivity extends ActivityWithLoading {
                     //Has user logged
                     Intent i = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(i);
+                    MainActivity.this.finish();
                     mDrawerLayout.closeDrawer(GravityCompat.START);
                 } else {
                     //No user logged

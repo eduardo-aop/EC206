@@ -64,13 +64,10 @@ public class ClientListFragment extends FragmentWithLoading {
     public void onResume() {
         super.onResume();
 
-//        broadcastReceiver();
-//        registerBroadcasts();
-
         mIsAdmin = Utils.getUserType(this.getContext());
 
-        loadClients();
         this.startLoading(null);
+        loadClients();
     }
 
     private void addListeners() {

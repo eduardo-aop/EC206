@@ -37,12 +37,21 @@
             <TextView
                 android:id="@+id/name_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:maxLines="1"
+                android:textAlignment="center"
+                android:textColor="@android:color/holo_blue_dark"
+                android:layout_margin="10dp"/>
 
             <TextView
                 android:id="@+id/description_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textAlignment="center"
+                android:textColor="@android:color/darker_gray"
+                android:layout_margin="10dp"/>
         </LinearLayout>
 
     </ScrollView>
@@ -60,7 +69,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
-            android:text="asdasd" />
+            android:textAlignment="center"
+            android:textSize="30dp"
+            android:textColor="@android:color/holo_red_dark"/>
 
         <Button
             android:id="@+id/buy_button"

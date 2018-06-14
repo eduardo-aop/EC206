@@ -121,8 +121,8 @@ app.put('/updateWorker', function(req, res) {
 
 	var id = req.body.worker_id
 	console.log('id: '+ id);
-	var sql = 'UPDATE client JOIN worker ON worker.id = client.worker_id SET client.name = ?, client.address = ?, client.cpf = ?, worker.salary = ?, worker.sector = ?, worker.function = ? WHERE worker.id = ?';
-	con.query(sql, [req.body.name, req.body.address, req.body.cpf, req.body.salary, req.body.sector, req.body.function, id], function (err, result, fields) {
+	var sql = 'UPDATE client JOIN worker ON worker.id = client.worker_id SET client.name = ?, client.email = ?, client.address = ?, client.cpf = ?, worker.salary = ?, worker.sector = ?, worker.function = ? WHERE worker.id = ?';
+	con.query(sql, [req.body.name, req.body.email, req.body.address, req.body.cpf, req.body.salary, req.body.sector, req.body.function, id], function (err, result, fields) {
 		if (err) throw err;
 		res.end();
 	});
