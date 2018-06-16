@@ -7,7 +7,7 @@ package com.example.eduar.brexpress.utils;
 public class Constants {
 
     //server ip and port address
-    public static String SERVER_URL = "http://192.168.0.12:8000/";
+    public static String SERVER_URL = "http://192.168.1.7:8000/";
 
     public static String EMAIL_REGEX = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"" +
             "(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\"" +
