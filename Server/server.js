@@ -34,7 +34,7 @@ app.post('/saveClient', function(req, res) {
 	var id = 0;
 	var sql = 'INSERT INTO client (name, email, address, cpf, pwd) VALUES (?,?,?,?,?)';
 	con.query(sql, [req.body.name, req.body.email, req.body.address, req.body.cpf, req.body.pwd], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		res.end();
 	});
 });
@@ -48,13 +48,13 @@ app.put('/updateClient', function(req, res) {
 		var checkUserSql = 'SELECT id FROM client WHERE email = ? AND pwd = ?';
 		
 		con.query(checkUserSql, [req.body.email, req.body.old_pwd], function (err, result, fields) {
-			if (err) throw err;
+			if (err) console.log(err);;
 			
 			console.log(result);
 			if (result.length > 0) {
 				var sql = 'UPDATE client SET name = ?, address = ?, cpf = ?, pwd = ? WHERE id = ?';
 				con.query(sql, [req.body.name, req.body.address, req.body.cpf, req.body.pwd, result[0].id], function (err, result, fields) {
-					if (err) throw err;
+					if (err) console.log(err);;
 					res.end();
 				});
 			}else {
@@ -65,7 +65,7 @@ app.put('/updateClient', function(req, res) {
 		var sql = 'UPDATE client SET name = ?, address = ?, cpf = ? WHERE id = ?';
 		console.log(req.body.price);
 		con.query(sql, [req.body.name, req.body.address, req.body.cpf, id], function (err, result, fields) {
-			if (err) throw err;
+			if (err) console.log(err);;
 			res.end();
 		});
 	}
@@ -77,7 +77,7 @@ app.get('/getClients', function(req, res) {
 	var id = 0;
 	var sql = 'SELECT * FROM client WHERE worker_id IS NULL ORDER BY name';
 	con.query(sql, function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		
 	    console.log(result);
 		res.send(result);
@@ -90,7 +90,7 @@ app.get('/getClientById', function(req, res) {
 	var id = req.query.id;
 	var sql = 'SELECT * FROM client WHERE id = ?';
 	con.query(sql, [id], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		
 	    console.log(result[0]);
 		res.send(result[0]);
@@ -106,11 +106,11 @@ app.post('/saveWorker', function(req, res) {
 	var id = 0;
 	var sql = 'INSERT INTO worker (salary, function, sector) VALUES (?,?,?)';
 	con.query(sql, [req.body.salary, req.body.function, req.body.sector], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		console.log(result);
 		var sqlClient = 'INSERT INTO client (name, email, address, cpf, worker_id, type) VALUES (?,?,?,?,?,?)';
 		con.query(sqlClient, [req.body.name, req.body.email, req.body.address, req.body.cpf, result.insertId, 1], function (err, result, fields) {
-			if (err) throw err;
+			if (err) console.log(err);;
 			res.end();
 		});
 	});
@@ -123,7 +123,7 @@ app.put('/updateWorker', function(req, res) {
 	console.log('id: '+ id);
 	var sql = 'UPDATE client JOIN worker ON worker.id = client.worker_id SET client.name = ?, client.email = ?, client.address = ?, client.cpf = ?, worker.salary = ?, worker.sector = ?, worker.function = ? WHERE worker.id = ?';
 	con.query(sql, [req.body.name, req.body.email, req.body.address, req.body.cpf, req.body.salary, req.body.sector, req.body.function, id], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		res.end();
 	});
 });
@@ -134,7 +134,7 @@ app.get('/getWorkers', function(req, res) {
 	var id = req.query.id;
 	var sql = 'SELECT * FROM client JOIN worker ON client.worker_id = worker.id WHERE worker_id IS NOT NULL AND client.id != ? ORDER BY name';
 	con.query(sql, [id], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		
 	    console.log(result);
 		res.send(result);
@@ -147,7 +147,7 @@ app.get('/getWorkerById', function(req, res) {
 	var id = req.query.id;
 	var sql = 'SELECT * FROM worker JOIN client ON worker.id = client.worker_id WHERE client.worker_id = ?';
 	con.query(sql, [id], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		
 	    console.log(result[0]);
 		res.send(result[0]);
@@ -161,7 +161,7 @@ app.post('/deleteWorkers', function(req, res) {
 	console.log(ids);
 	var sql = 'DELETE FROM client WHERE worker_id IN (?)';
 	con.query(sql, [ids], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 	
 	    console.log(result);
 		res.send(result);
@@ -179,7 +179,7 @@ app.post('/doLogin', function(req, res) {
 	var result = null;
 	
 	con.query(sql, [req.body.email, req.body.pwd], function (err, result, fields) {
-		if (err) throw err
+		if (err) console.log(err);
 		
 		var resp = result[0];
 		if (result.length > 0) {
@@ -202,7 +202,7 @@ app.post('/saveProduct', function(req, res) {
 	var sql = 'INSERT INTO product (name, description, price, discount, qtd) VALUES (?,?,?,?,?)';
 	console.log(req.body.price);
 	con.query(sql, [req.body.name, req.body.description, (req.body.price).toFixed(2), req.body.discount, req.body.qtd], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 	
 		id = result.insertId;
 		require("fs").writeFile("./images/products/" + id + ".png", req.body.image, 'base64', function(err) {
@@ -219,7 +219,7 @@ app.put('/updateProduct', function(req, res) {
 	var sql = 'UPDATE product SET name = ?, description = ?, price = ?, discount = ?, qtd = ? WHERE id = ?';
 	console.log(req.body.price);
 	con.query(sql, [req.body.name, req.body.description, (req.body.price).toFixed(2), req.body.discount, req.body.qtd, id], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 	
 		require("fs").writeFile("./images/products/" + id + ".png", req.body.image, 'base64', function(err) {
 			console.log(err);
@@ -235,7 +235,7 @@ app.post('/deleteProducts', function(req, res) {
 	console.log(ids);
 	var sql = 'DELETE FROM product WHERE id IN (?)';
 	con.query(sql, [ids], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 	
 	    console.log(result);
 		res.send(result);
@@ -248,7 +248,7 @@ app.get('/getProducts', function(req, res) {
 	var id = 0;
 	var sql = 'SELECT * FROM product ORDER BY name';
 	con.query(sql, function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		
 	    console.log(result);
 		res.send(result);
@@ -261,7 +261,7 @@ app.get('/getProductById', function(req, res) {
 	var id = req.query.id;
 	var sql = 'SELECT * FROM product where id = ' + id;
 	con.query(sql, function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		
 	    console.log(result);
 		res.send(result[0]);
@@ -281,16 +281,16 @@ app.post('/buyProduct', function(req, res) {
 	
 	var randomShipping = 'SELECT id FROM shipping ORDER BY rand() limit 10';
 	con.query(randomShipping, function (err, sResult, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 	
 		console.log(sResult[0].id);
 	    var sql = 'INSERT INTO client_has_product (client_id, product_id, product_status, arrival_date, purchase_date, shipping_id) VALUES (?,?,?,?,?,?)';
 		con.query(sql, [clientId, productId, 0, arrivalDate.getTime(), currentDate.getTime(), sResult[0].id], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		
 			var sql = 'UPDATE product SET qtd = qtd -1 WHERE id = ?';
 			con.query(sql, [productId], function (err, result, fields) {
-				if (err) throw err;
+				if (err) console.log(err);;
 		
 				console.log(result);
 				res.send(result);
@@ -315,7 +315,7 @@ app.get('/getOrders', function(req, res) {
 	
 	console.log(sql);
 	con.query(sql, [id], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		
 	    console.log(result);
 		res.send(result);
@@ -331,7 +331,7 @@ app.post('/saveShipping', function(req, res) {
 	var id = 0;
 	var sql = 'INSERT INTO shipping (name, company, payment) VALUES (?,?,?)';
 	con.query(sql, [req.body.name, req.body.company, req.body.payment], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		console.log(result);
 		res.end();
 	});
@@ -344,7 +344,7 @@ app.put('/updateShipping', function(req, res) {
 	console.log('id: '+ id);
 	var sql = 'UPDATE shipping SET name = ?, company = ?, payment = ? WHERE id = ?';
 	con.query(sql, [req.body.name, req.body.company, req.body.payment, id], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		res.end();
 	});
 });
@@ -355,7 +355,7 @@ app.get('/getAllShipping', function(req, res) {
 	var id = req.query.id;
 	var sql = 'SELECT * FROM shipping ORDER BY name';
 	con.query(sql, [id], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		
 	    console.log(result);
 		res.send(result);
@@ -368,7 +368,7 @@ app.get('/getShippingById', function(req, res) {
 	var id = req.query.id;
 	var sql = 'SELECT * FROM shipping WHERE id = ?';
 	con.query(sql, [id], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 		
 	    console.log(result[0]);
 		res.send(result[0]);
@@ -382,7 +382,7 @@ app.post('/deleteShipping', function(req, res) {
 	console.log(ids);
 	var sql = 'DELETE FROM shipping WHERE id IN (?)';
 	con.query(sql, [ids], function (err, result, fields) {
-		if (err) throw err;
+		if (err) console.log(err);;
 	
 	    console.log(result);
 		res.send(result);
@@ -397,14 +397,14 @@ function purchaseStatusChange() {
 		console.log("called");
 		var sql = 'UPDATE client_has_product SET product_status = product_status +1 WHERE product_status < 3';
 		con.query(sql, function (err, result, fields) {
-			if (err) throw err;
+			if (err) console.log(err);;
 	
 			console.log(result);
 		});
 	}, 1000*60);
 }
 
-var server = app.listen(8000, '192.168.0.12', function () {
+var server = app.listen(8000, '192.168.1.7', function () {
 	var host = server.address().address
 	var port = server.address().port
 
